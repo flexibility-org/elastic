@@ -5,7 +5,7 @@ defmodule Elastic.Document do
   alias Elastic.Index
 
   def index(index, type, id, data) do
-    document_path(index, type, id) |> HTTP.put(body: data)
+    document_path(index, type, id) |> HTTP.post(body: data)
   end
 
   def update(index, type, id, data) do
