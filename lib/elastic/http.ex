@@ -114,16 +114,17 @@ defmodule Elastic.HTTP do
   end
 
   def add_aws_header(options, method, url, body) do
-    if AWS.enabled? do
-      headers = AWS.authorization_headers(
-        method,
-        url,
-        options[:headers],
-        body
-      )
-      |> Enum.reduce(options[:headers], fn ({header, value}, headers) ->
-        Keyword.put(headers, String.to_atom(header), value)
-      end)
+    if AWS.enabled?() do
+      headers =
+        AWS.authorization_headers(
+          method,
+          url,
+          options[:headers],
+          body
+        )
+        |> Enum.reduce(options[:headers], fn {header, value}, headers ->
+          Keyword.put(headers, String.to_atom(header), value)
+        end)
 
       Keyword.put(options, :headers, headers)
     else
@@ -135,7 +136,6 @@ defmodule Elastic.HTTP do
     basic_auth = Keyword.get(options, :basic_auth, Elastic.basic_auth())
     Keyword.put(options, :basic_auth, basic_auth)
   end
-
 
   defp process_response(response) do
     ResponseHandler.process(response)

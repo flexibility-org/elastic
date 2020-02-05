@@ -1,6 +1,6 @@
 defmodule Elastic.Mixfile do
   use Mix.Project
-  @version "3.5.0"
+  @version "3.5.2"
 
   def project do
     [
@@ -24,7 +24,7 @@ defmodule Elastic.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpotion]]
+    [applications: [:logger, :httpotion, :aws_auth, :jason]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -32,7 +32,7 @@ defmodule Elastic.Mixfile do
 
   defp deps do
     [
-      {:httpotion, "~> 3.0.2"},
+      {:httpotion, "~> 3.1"},
       {:jason, "~> 1.1.2"},
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
