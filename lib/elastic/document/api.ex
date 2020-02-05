@@ -187,9 +187,11 @@ defmodule Elastic.Document.API do
 
       def search(query, es_index \\ @es_index) do
         result = Query.build(es_index, query) |> Index.search()
+
         case result do
           {:error, code, error} ->
             {:error, code, error}
+
           {:ok, 200, %{"hits" => %{"hits" => hits}}} ->
             Enum.map(hits, fn %{"_source" => source, "_id" => id} ->
               into_struct(id, source)
