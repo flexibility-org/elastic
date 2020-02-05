@@ -218,6 +218,10 @@ defmodule Elastic.Document.API do
         Index.exists?(@es_index)
       end
 
+      def create do
+        Index.create(@es_index)
+      end
+
       defp into_struct(id, source) do
         item = for {key, value} <- source, into: %{}, do: {String.to_atom(key), value}
         struct(__MODULE__, Map.put(item, :id, id))
