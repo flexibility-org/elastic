@@ -101,11 +101,14 @@ defmodule Elastic.HTTP do
       |> Keyword.put_new(:headers, Keyword.new())
       |> Keyword.put(:body, body)
       |> Keyword.put(:timeout, timeout)
+      |> Keyword.put(:method, method)
+      |> Keyword.put(:url, URI.to_string(url))
       |> add_content_type_header
       |> add_aws_header(method, url, body)
       |> add_basic_auth
 
-    apply(HTTPotion, method, [url, options]) |> process_response
+    client = Tesla.client([], Tesla.Adapter.Hackney)
+    Tesla.request(client, options) |> process_response
   end
 
   defp add_content_type_header(options) do
