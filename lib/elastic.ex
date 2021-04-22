@@ -39,10 +39,12 @@ defmodule Elastic do
   Elastic will then use the `AWSAuth` library to sign URLs for requests to this store.
   """
 
+  @spec base_url() :: term()
   def base_url do
     Application.get_env(:elastic, :base_url)
   end
 
+  @spec basic_auth() :: term()
   def basic_auth do
     Application.get_env(:elastic, :basic_auth, nil)
   end
