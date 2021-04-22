@@ -87,8 +87,14 @@ defmodule Elastic.HTTP do
     request(:post, "_bulk", options)
   end
 
+  @spec base_url() :: binary()
   defp base_url do
-    Elastic.base_url() || "http://localhost:9200"
+    base_url = Elastic.base_url()
+    if is_binary(base_url) do
+      base_url
+    else
+      "http://localhost:9200"
+    end
   end
 
   defp request(method, url, options) do
