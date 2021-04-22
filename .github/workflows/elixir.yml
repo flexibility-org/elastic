@@ -17,6 +17,10 @@ jobs:
           - 6.5.4
           - 6.6.2
           - 7.6.0
+        otp_version:
+          - 22.0
+          - 22.2
+          - 23.0
 
 
     runs-on: ubuntu-18.04
@@ -27,7 +31,7 @@ jobs:
       uses: actions/setup-elixir@v1
       with:
         elixir-version: ${{ matrix.elixir_version }}
-        otp-version: 22.2 # Define the OTP version [required]
+        otp-version: ${{ matrix.otp_version }}
 
     - name: Install Dependencies
       run: mix deps.get
