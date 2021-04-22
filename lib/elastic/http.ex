@@ -90,6 +90,7 @@ defmodule Elastic.HTTP do
   @spec base_url() :: binary()
   defp base_url do
     base_url = Elastic.base_url()
+
     if is_binary(base_url) do
       base_url
     else
