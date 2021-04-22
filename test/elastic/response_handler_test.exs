@@ -53,9 +53,7 @@ defmodule Elastic.ResponseHandlerTest do
   test "handles other errors" do
     response = ResponseHandler.process({:error, :other})
 
-    assert {:error, 0,
-            %{"error" => "Could not connect to Elasticsearch: :other"}} ==
+    assert {:error, 0, %{"error" => "Could not connect to Elasticsearch: :other"}} ==
              response
   end
-
 end

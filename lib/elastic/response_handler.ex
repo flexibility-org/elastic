@@ -43,10 +43,11 @@ defmodule Elastic.ResponseHandler do
 
   def process({:error, reason}) do
     {:error, 0,
-     %{"error" =>
-       "Could not connect to Elasticsearch: " <>
-         Kernel.inspect(reason)}
-     }
+     %{
+       "error" =>
+         "Could not connect to Elasticsearch: " <>
+           Kernel.inspect(reason)
+     }}
   end
 
   defp json_error(error) do
