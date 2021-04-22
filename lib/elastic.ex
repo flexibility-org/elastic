@@ -46,6 +46,6 @@ defmodule Elastic do
 
   @spec basic_auth() :: term()
   def basic_auth do
-    Application.get_env(:elastic, :basic_auth, nil)
+    Application.get_env(:elastic, :basic_auth)
   end
 end
