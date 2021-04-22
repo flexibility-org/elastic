@@ -1,3 +1,6 @@
+# This setup is heavily inspired by
+# https://hashrocket.com/blog/posts/build-the-ultimate-elixir-ci-with-github-actions
+
 name: Elixir CI
 
 on: push
