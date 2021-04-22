@@ -1,5 +1,6 @@
 defmodule Elastic.ResponseHandler do
   @moduledoc false
+  alias Jason.DecodeError
 
   def process({:ok, %{body: body, status: status_code}}) when status_code in 400..599 do
     case decode_body(body) do
@@ -54,7 +55,7 @@ defmodule Elastic.ResponseHandler do
     {:error, 0,
      %{
        "error" =>
-         "Could not decode response into JSON, error: #{inspect(Jason.DecodeError.message(error))}"
+         "Could not decode response into JSON, error: #{inspect(DecodeError.message(error))}"
      }}
   end
 
