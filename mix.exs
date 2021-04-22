@@ -19,6 +19,11 @@ defmodule Elastic.Mixfile do
         canonical: "http://hexdocs.pm/elastic",
         source_url: "https://github.com/radar/elastic"
       ],
+      dialyzer: [
+        plt_core_path: "priv/plts",
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        plt_add_apps: [:mix],
+      ],
       deps: deps()
     ]
   end
@@ -37,6 +42,7 @@ defmodule Elastic.Mixfile do
       {:jason, "~> 1.1.2"},
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
+      {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
