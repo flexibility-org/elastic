@@ -48,6 +48,22 @@ jobs:
     - name: Run Credo
       run: mix credo --strict
 
+    - name: Retrieve PLT Cache
+      uses: actions/cache@v1
+      id: plt-cache
+      with:
+        path: priv/plts
+        key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+
+    - name: Create PLTs
+      if: steps.plt-cache.outputs.cache-hit != 'true'
+      run: |
+        mkdir -p priv/plts
+        mix dialyzer --plt
+
+    - name: Run dialyzer
+      run: mix dialyzer --no-check --halt-exit-status
+
     - name: Setup ElasticSearch
       run: docker run -d -p 9200:9200 -p 9300:9300 -e 'discovery.type=single-node' elasticsearch:${{matrix.elasticsearch_version}}
 
