@@ -1,7 +1,4 @@
 defmodule Elastic.HTTP do
-  alias Elastic.AWS
-  alias Tesla.Env
-
   @moduledoc ~S"""
   Used to make raw calls to Elastic Search.
 
@@ -26,7 +23,9 @@ defmodule Elastic.HTTP do
   ```
   """
 
+  alias Elastic.AWS
   alias Elastic.ResponseHandler
+  alias Tesla.Env
 
   @type method ::
           :head
