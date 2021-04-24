@@ -1,7 +1,11 @@
 defmodule Elastic.ResponseHandler do
   @moduledoc false
   alias Jason.DecodeError
+  alias Tesla.Env
 
+  @type error :: {:error, integer(), %{required(String.t()) => String.t()}}
+
+  @spec process(Env.result()) :: {:ok, integer(), any()} | error()
   def process({:ok, %{body: body, status: status_code}}) when status_code in 400..599 do
     case decode_body(body) do
       {:ok, decoded_body} ->
@@ -51,6 +55,7 @@ defmodule Elastic.ResponseHandler do
      }}
   end
 
+  @spec json_error(DecodeError.t()) :: error()
   defp json_error(error) do
     {:error, 0,
      %{
@@ -59,6 +64,7 @@ defmodule Elastic.ResponseHandler do
      }}
   end
 
+  @spec decode_body(binary()) :: {:ok, any()} | {:error, DecodeError.t()}
   defp decode_body(""), do: {:ok, ""}
 
   defp decode_body(body) do
