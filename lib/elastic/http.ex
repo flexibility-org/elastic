@@ -1,5 +1,6 @@
 defmodule Elastic.HTTP do
   alias Elastic.AWS
+  alias Tesla.Env
 
   @moduledoc ~S"""
   Used to make raw calls to Elastic Search.
@@ -27,6 +28,17 @@ defmodule Elastic.HTTP do
 
   alias Elastic.ResponseHandler
 
+  @type method ::
+          :head
+          | :get
+          | :delete
+          | :trace
+          | :options
+          | :post
+          | :put
+          | :patch
+  @type url :: binary() | URI.t()
+
   @doc """
   Makes a request using the GET HTTP method, and can take a body.
 
@@ -35,6 +47,7 @@ defmodule Elastic.HTTP do
   ```
 
   """
+  @spec get(url(), Keyword.t()) :: ResponseHandler.result()
   def get(url, options \\ []) do
     request(:get, url, options)
   end
@@ -42,6 +55,7 @@ defmodule Elastic.HTTP do
   @doc """
   Makes a request using the POST HTTP method, and can take a body.
   """
+  @spec post(url(), Keyword.t()) :: ResponseHandler.result()
   def post(url, options \\ []) do
     request(:post, url, options)
   end
@@ -55,6 +69,7 @@ defmodule Elastic.HTTP do
   })
   ```
   """
+  @spec put(url(), Keyword.t()) :: ResponseHandler.result()
   def put(url, options \\ []) do
     request(:put, url, options)
   end
@@ -66,6 +81,7 @@ defmodule Elastic.HTTP do
   Elastic.HTTP.delete("/answers/answer/1")
   ```
   """
+  @spec delete(url(), Keyword.t()) :: ResponseHandler.result()
   def delete(url, options \\ []) do
     request(:delete, url, options)
   end
@@ -77,10 +93,12 @@ defmodule Elastic.HTTP do
   Elastic.HTTP.head("/answers")
   ```
   """
+  @spec head(url(), Keyword.t()) :: ResponseHandler.result()
   def head(url, options \\ []) do
     request(:head, url, options)
   end
 
+  @spec bulk(Keyword.t()) :: ResponseHandler.result()
   def bulk(options) do
     body = Keyword.get(options, :body, "") <> "\n"
     options = Keyword.put(options, :body, body)
@@ -98,6 +116,7 @@ defmodule Elastic.HTTP do
     end
   end
 
+  @spec request(method(), url(), Keyword.t()) :: ResponseHandler.result()
   defp request(method, url, options) do
     body = Keyword.get(options, :body, []) |> encode_body
     timeout = Application.get_env(:elastic, :timeout, 30_000)
@@ -118,11 +137,13 @@ defmodule Elastic.HTTP do
     Tesla.request(client, options) |> process_response
   end
 
+  @spec add_content_type_header(Keyword.t()) :: Keyword.t()
   defp add_content_type_header(options) do
     headers = Keyword.put(options[:headers], :"Content-Type", "application/json")
     Keyword.put(options, :headers, headers)
   end
 
+  @spec add_aws_header(Keyword.t(), method, url(), binary()) :: Keyword.t()
   def add_aws_header(options, method, url, body) do
     if AWS.enabled?() do
       headers =
@@ -142,15 +163,18 @@ defmodule Elastic.HTTP do
     end
   end
 
+  @spec add_basic_auth(Keyword.t()) :: Keyword.t()
   def add_basic_auth(options) do
     basic_auth = Keyword.get(options, :basic_auth, Elastic.basic_auth())
     Keyword.put(options, :basic_auth, basic_auth)
   end
 
+  @spec process_response(Env.result()) :: ResponseHandler.result()
   defp process_response(response) do
     ResponseHandler.process(response)
   end
 
+  @spec encode_body(any()) :: binary()
   defp encode_body(body) when is_binary(body) do
     body
   end

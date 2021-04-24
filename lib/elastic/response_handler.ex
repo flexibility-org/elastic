@@ -4,8 +4,9 @@ defmodule Elastic.ResponseHandler do
   alias Tesla.Env
 
   @type error :: {:error, integer(), %{required(String.t()) => String.t()}}
+  @type result :: {:ok, integer(), any()} | error()
 
-  @spec process(Env.result()) :: {:ok, integer(), any()} | error()
+  @spec process(Env.result()) :: result()
   def process({:ok, %{body: body, status: status_code}}) when status_code in 400..599 do
     case decode_body(body) do
       {:ok, decoded_body} ->
