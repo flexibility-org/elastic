@@ -106,31 +106,37 @@ defmodule Elastic.Scroller do
   end
 
   @doc false
+  @spec scroll_id(pid :: pid()) :: term()
   def scroll_id(pid) do
     GenServer.call(pid, :scroll_id)
   end
 
   @doc false
+  @spec index(pid :: pid()) :: term()
   def index(pid) do
     GenServer.call(pid, :index)
   end
 
   @doc false
+  @spec body(pid :: pid()) :: term()
   def body(pid) do
     GenServer.call(pid, :body)
   end
 
   @doc false
+  @spec keepalive(pid :: pid()) :: term()
   def keepalive(pid) do
     GenServer.call(pid, :keepalive)
   end
 
   @doc false
+  @spec size(pid :: pid()) :: term()
   def size(pid) do
     GenServer.call(pid, :size)
   end
 
   @doc false
+  @spec clear(pid :: pid()) :: term()
   def clear(pid) do
     GenServer.call(pid, :clear)
   end
