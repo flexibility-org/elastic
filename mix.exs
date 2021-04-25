@@ -29,7 +29,12 @@ defmodule Elastic.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :tesla, :hackney, :aws_auth, :jason]]
+    [
+      applications: [:logger, :tesla, :hackney, :aws_auth, :jason],
+      extra_applications: [
+        :stream_data
+      ]
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
