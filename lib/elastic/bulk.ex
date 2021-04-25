@@ -1,5 +1,6 @@
 defmodule Elastic.Bulk do
   alias Elastic.HTTP
+  alias Elastic.ResponseHandler
 
   @moduledoc ~S"""
   Used to make requests to ElasticSearch's bulk API.
@@ -29,11 +30,20 @@ defmodule Elastic.Bulk do
   For `create` requests, an ID _must_ be provided.
   """
 
+  @type document ::
+          {
+            index :: binary(),
+            type :: binary(),
+            id :: binary(),
+            document :: term()
+          }
+
   @doc """
     Makes bulk index requests to ElasticSearch.
 
     For more information see documentation on `Elastic.Bulk`.
   """
+  @spec index(list(document())) :: ResponseHandler.result()
   def index(documents) do
     documents
     |> Enum.map(&index_or_create_document(&1, :index))
@@ -45,6 +55,7 @@ defmodule Elastic.Bulk do
 
     For more information see documentation on `Elastic.Bulk`.
   """
+  @spec create(list(document())) :: ResponseHandler.result()
   def create(documents) do
     documents
     |> Enum.map(&index_or_create_document(&1, :create))
@@ -56,12 +67,17 @@ defmodule Elastic.Bulk do
 
     For more information see documentation on `Elastic.Bulk`.
   """
+  @spec update(list(document())) :: ResponseHandler.result()
   def update(documents) do
     documents
     |> Enum.map(&update_document/1)
     |> call_bulk_api
   end
 
+  @spec index_or_create_document(
+          document(),
+          action :: atom()
+        ) :: binary()
   defp index_or_create_document({index, type, id, document}, action) do
     [
       Jason.encode!(%{action => identifier(index, type, id)}),
@@ -70,6 +86,7 @@ defmodule Elastic.Bulk do
     |> Enum.join("\n")
   end
 
+  @spec update_document(document()) :: binary()
   defp update_document({index, type, id, document}) do
     [
       Jason.encode!(%{update: identifier(index, type, id)}),
@@ -79,6 +96,15 @@ defmodule Elastic.Bulk do
     |> Enum.join("\n")
   end
 
+  @spec identifier(
+          index :: binary(),
+          type :: binary(),
+          id :: binary() | nil
+        ) :: %{
+          required(:_index) => binary(),
+          required(:_type) => binary(),
+          optional(:_id) => binary()
+        }
   defp identifier(index, type, nil) do
     %{_index: index, _type: type}
   end
@@ -87,6 +113,7 @@ defmodule Elastic.Bulk do
     identifier(index, type, nil) |> Map.put(:_id, id)
   end
 
+  @spec call_bulk_api(quereis :: list(binary())) :: ResponseHandler.result()
   defp call_bulk_api(queries) do
     queries = queries |> Enum.join("\n")
     HTTP.bulk(body: queries)

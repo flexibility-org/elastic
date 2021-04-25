@@ -156,14 +156,28 @@ defmodule Elastic.Document.API do
       alias Elastic.Index
       alias Elastic.Query
 
+      @spec index(
+          id :: binary(),
+          data :: term(),
+          es_index :: binary()
+        ) :: ResponseHandler.result()
       def index(id, data, es_index \\ @es_index) do
         Document.index(es_index, @es_type, id, data)
       end
 
+      @spec update(
+          id :: binary(),
+          data :: term(),
+          es_index :: binary()
+        ) :: ResponseHandler.result()
       def update(id, data, es_index \\ @es_index) do
         Document.update(es_index, @es_type, id, data)
       end
 
+      @spec get(
+          id :: binary(),
+          es_index :: binary()
+        ) :: %__MODULE__{} | nil | ResponseHandler.result()
       def get(id, es_index \\ @es_index) do
         case raw_get(id, es_index) do
           {:ok, 200, %{"_source" => source, "_id" => id}} ->
@@ -177,14 +191,26 @@ defmodule Elastic.Document.API do
         end
       end
 
+      @spec delete(
+          id :: binary(),
+          es_index :: binary()
+        ) :: ReponseHandler.result()
       def delete(id, es_index \\ @es_index) do
         Document.delete(es_index, @es_type, id)
       end
 
+      @spec raw_get(
+          id :: binary(),
+          es_index :: binary()
+        ) :: ResponseHandler.result()
       def raw_get(id, es_index \\ @es_index) do
         Document.get(es_index, @es_type, id)
       end
 
+      @spec search(
+          query :: term(),
+          es_index :: binary()
+        ) :: list(%__MODULE__{}) | ResponseHandler.error()
       def search(query, es_index \\ @es_index) do
         result = Query.build(es_index, query) |> Index.search()
 
@@ -199,31 +225,50 @@ defmodule Elastic.Document.API do
         end
       end
 
+      @spec raw_search(
+          query :: term(),
+          es_index :: binary()
+        ) :: ResponseHandler.result()
       def raw_search(query, es_index \\ @es_index) do
         search_query(query, es_index) |> Index.search()
       end
 
+      @spec search_query(
+          query :: term(),
+          es_index :: binary()
+        ) :: %Elastic.Query{}
       def search_query(query, es_index \\ @es_index) do
         Query.build(es_index, query)
       end
 
+      @spec raw_count(
+          query :: term(),
+          es_index :: binary()
+        ) :: ResponseHandler.result()
       def raw_count(query, es_index \\ @es_index) do
         Query.build(es_index, query) |> Index.count()
       end
 
+      @spec count(query :: term()) :: term()
       def count(query) do
         {:ok, 200, %{"count" => count}} = raw_count(query)
         count
       end
 
+      @spec index_exists?() :: boolean()
       def index_exists? do
         Index.exists?(@es_index)
       end
 
+      @spec create() :: ResponseHandler.result()
       def create do
         Index.create(@es_index)
       end
 
+      @spec into_struct(
+          id :: binary(),
+          source :: map()
+        ) :: %__MODULE__{}
       defp into_struct(id, source) do
         item = for {key, value} <- source, into: %{}, do: {String.to_atom(key), value}
         struct(__MODULE__, Map.put(item, :id, id))
