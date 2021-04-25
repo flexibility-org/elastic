@@ -2,6 +2,7 @@ defmodule Elastic.AWS do
   alias Elastic.HTTP
 
   @moduledoc false
+  @spec enabled?() :: any()
   def enabled? do
     settings()[:enabled]
   end
