@@ -1,6 +1,7 @@
 defmodule Elastic.Index do
   alias Elastic.HTTP
   alias Elastic.Query
+  alias Elastic.ResponseHandler
 
   @moduledoc ~S"""
   Collection of functions to work with indices.
@@ -10,6 +11,7 @@ defmodule Elastic.Index do
   Helper function for getting the name of an index combined with the
   `index_prefix` and `mix_env` configuration.
   """
+  @spec name(binary()) :: binary()
   def name(index) do
     [index_prefix(), mix_env(), index]
     |> Enum.reject(&(&1 == nil || &1 == ""))
@@ -29,7 +31,7 @@ defmodule Elastic.Index do
   Elastic.Index.create("answer")
   ```
   """
-
+  @spec create(binary()) :: ResponseHandler.result()
   def create(index) do
     HTTP.put(name(index))
   end
@@ -50,6 +52,7 @@ defmodule Elastic.Index do
   ```
   """
 
+  @spec create(binary(), any()) :: ResponseHandler.result()
   def create(index, parameters) do
     HTTP.put(name(index), body: parameters)
   end
@@ -68,6 +71,7 @@ defmodule Elastic.Index do
   ```
 
   """
+  @spec delete(binary()) :: ResponseHandler.result()
   def delete(index) do
     index |> name |> HTTP.delete()
   end
@@ -75,6 +79,7 @@ defmodule Elastic.Index do
   @doc """
   Refreshes the specified index by issuing a [refresh HTTP call](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-refresh.html).
   """
+  @spec refresh(binary()) :: ResponseHandler.result()
   def refresh(index) do
     HTTP.post("#{name(index)}/_refresh")
   end
@@ -83,6 +88,7 @@ defmodule Elastic.Index do
   Checks if the specified index exists.
   The index name will be automatically prefixed as per this package's configuration.
   """
+  @spec exists?(binary()) :: boolean()
   def exists?(index) do
     {_, status, _} = index |> name |> HTTP.head()
     status == 200
@@ -91,6 +97,7 @@ defmodule Elastic.Index do
   @doc """
   Opens the specified index.
   """
+  @spec open(binary()) :: ResponseHandler.result()
   def open(index) do
     HTTP.post("#{name(index)}/_open")
   end
@@ -98,24 +105,29 @@ defmodule Elastic.Index do
   @doc """
   Closes the specified index.
   """
+  @spec close(binary()) :: ResponseHandler.result()
   def close(index) do
     HTTP.post("#{name(index)}/_close")
   end
 
   @doc false
+  @spec search(%Query{}) :: ResponseHandler.result()
   def search(%Query{index: index, body: body}) do
     HTTP.get("#{name(index)}/_search", body: body)
   end
 
   @doc false
+  @spec count(%Query{}) :: ResponseHandler.result()
   def count(%Query{index: index, body: body}) do
     HTTP.get("#{name(index)}/_count", body: body)
   end
 
+  @spec index_prefix() :: term()
   defp index_prefix do
     Application.get_env(:elastic, :index_prefix)
   end
 
+  @spec mix_env() :: atom() | nil
   defp mix_env do
     if Application.get_env(:elastic, :use_mix_env),
       do: Mix.env(),
