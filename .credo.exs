@@ -102,6 +102,7 @@
 
         # Custom checks can be created using `mix credo.gen.check`.
         #
+        {Credo.Check.Readability.Specs, []},
       ]
     }
   ]
