@@ -43,7 +43,10 @@ defmodule Elastic.Mixfile do
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
       {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, ">= 0.0.0", only: :dev},
+
+      # Property-based testing
+      {:stream_data, "~> 0.5", only: [:dev, :test]}
     ]
   end
 
