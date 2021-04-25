@@ -135,6 +135,32 @@ defmodule Elastic.Scroller do
     GenServer.call(pid, :clear)
   end
 
+  @type request ::
+          :body
+          | :clear
+          | :index
+          | :keepalive
+          | :next_page
+          | :results
+          | :scroll_id
+          | :size
+
+  @type state ::
+          %{
+            optional(:index) => binary(),
+            optional(:body) => any(),
+            optional(:keepalive) => boolean(),
+            optional(:scroll_id) => binary()
+          }
+
+  @spec handle_call(request :: request(), GenServer.from(), state :: state()) ::
+          {:reply, reply, new_state}
+          | {:reply, reply, new_state, timeout() | :hibernate | {:continue, term()}}
+          | {:noreply, new_state}
+          | {:noreply, new_state, timeout() | :hibernate | {:continue, term()}}
+          | {:stop, reason, reply, new_state}
+          | {:stop, reason, new_state}
+        when reply: term(), new_state: state(), reason: term()
   def handle_call(:results, _from, state = %{hits: hits}) do
     {:reply, hits, state}
   end
