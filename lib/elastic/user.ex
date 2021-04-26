@@ -46,6 +46,9 @@ defmodule Elastic.User do
     HTTP.delete(@base_url <> url_encode_username(username))
   end
 
+  @spec is_valid_username?(
+      username :: binary()
+    ) :: boolean()
   def is_valid_username?(username) do
     len = String.length(username)
 
