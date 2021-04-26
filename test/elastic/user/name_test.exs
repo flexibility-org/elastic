@@ -1,8 +1,8 @@
-defmodule Elastic.UserTest do
+defmodule Elastic.User.NameTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  alias Elastic.User
+  alias Elastic.User.Name
 
   @valid_non_infix_chars 0x21..0x7E
 
@@ -18,7 +18,7 @@ defmodule Elastic.UserTest do
 
   describe "is_valid_username?/1" do
     test "given empty string, returns false" do
-      assert User.is_valid_username?("") == false
+      assert Name.is_valid?("") == false
     end
 
     property "given a string with leading spaces, returns false" do
@@ -27,7 +27,7 @@ defmodule Elastic.UserTest do
               prefix <- string(0x20..0x20, min_length: 1, max_length: 20)
             ) do
         username = prefix <> text
-        assert User.is_valid_username?(username) == false
+        assert Name.is_valid?(username) == false
       end
     end
 
@@ -37,7 +37,7 @@ defmodule Elastic.UserTest do
               postfix <- string(0x20..0x20, min_length: 1, max_length: 20)
             ) do
         username = text <> postfix
-        assert User.is_valid_username?(username) == false
+        assert Name.is_valid?(username) == false
       end
     end
 
@@ -48,19 +48,19 @@ defmodule Elastic.UserTest do
               postfix <- string(0x20..0x20, min_length: 1, max_length: 20)
             ) do
         username = prefix <> text <> postfix
-        assert User.is_valid_username?(username) == false
+        assert Name.is_valid?(username) == false
       end
     end
 
     property "given a string with length > 1024 bytes, returns false" do
       check all(username <- string(@valid_non_infix_chars, min_length: 1025, max_length: 10_000)) do
-        assert User.is_valid_username?(username) == false
+        assert Name.is_valid?(username) == false
       end
     end
 
     property "given a valid name, returns true" do
       check all(username <- valid_username_gen()) do
-        assert User.is_valid_username?(username) == true
+        assert Name.is_valid?(username) == true
       end
     end
   end
