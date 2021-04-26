@@ -6,6 +6,7 @@ defmodule Elastic.User do
   [ElasticSearch REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html):
 
   * [Create or update users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-user.html)
+  * [Change passwords API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-change-password.html)
   * [Delete users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-delete-user.html)
   """
 
@@ -28,6 +29,12 @@ defmodule Elastic.User do
     )
   end
 
+  @doc """
+  Change the password of the given user.
+
+  If no user is given (`nil`), changes the password of the current
+  user.
+  """
   @spec change_password(
           new_password :: binary(),
           username :: binary() | nil
