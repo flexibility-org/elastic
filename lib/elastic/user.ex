@@ -2,6 +2,12 @@ defmodule Elastic.User do
   @moduledoc """
   An API wrapper for dealing with ElasticSearch users.
 
+  In particular, this wrapper covers the following elements of the
+  [ElasticSearch REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html):
+
+  * [Create or update users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-user.html)
+  * [Delete users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-delete-user.html)
+
   ## Usernames
 
   The ElasticSearch Users API, asks for usernames to be supplied as
