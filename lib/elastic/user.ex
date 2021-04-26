@@ -6,8 +6,8 @@ defmodule Elastic.User do
 
   The ElasticSearch Users API, asks for usernames to be supplied as
   part of a URL path. At the same time, ElasticSearch allows for all
-  sorts of printable ASCII characters in usernames, including `?`, `/`,
-  `&`, `=`, and so on.
+  sorts of printable ASCII characters in usernames (e.g., `?`, `/`, `&`,
+  `=`).
 
   When you pass a username to this module, the username is
   percent-encoded before being used with the API.
