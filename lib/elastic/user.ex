@@ -53,6 +53,12 @@ defmodule Elastic.User do
     HTTP.delete(@base_url <> url_encode_username(username))
   end
 
+  @doc """
+    A [valid ElasticSearch
+    username](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-user.html#security-api-put-user-path-params)
+    is between 1 and 1024 characters, each being a printable ASCII
+    character, with no leading og trailing spaces.
+  """
   @spec is_valid_username?(username :: binary()) :: boolean()
   def is_valid_username?(username) do
     len = String.length(username)
