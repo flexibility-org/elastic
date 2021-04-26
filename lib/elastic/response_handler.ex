@@ -1,5 +1,8 @@
 defmodule Elastic.ResponseHandler do
-  @moduledoc false
+  @moduledoc """
+    Handles all responses from the ElasticSearch API.
+  """
+
   alias Jason.DecodeError
   alias Tesla.Env
 
