@@ -1,5 +1,6 @@
 defmodule Elastic.User do
   alias Elastic.HTTP
+  alias Elastic.ResponseHandler
 
   @base_url "/_security/user/"
 
@@ -26,7 +27,7 @@ defmodule Elastic.User do
   @spec create(
           username :: binary(),
           password :: binary()
-        ) :: ResopnseHandler.result()
+        ) :: ResponseHandler.result()
   def create(username, password) do
     HTTP.put(@base_url <> url_encode_username(username),
       body: %{
