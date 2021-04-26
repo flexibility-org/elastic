@@ -42,9 +42,8 @@ If you've got a feature request, then please submit a pull request which adds th
 
 This package is designed to work with and routinely tested against the following ElasticSearch versions:
 
-- 2.4.x
-- 5.x
 - 6.x
+- 7.x
 
 If you find any incompatibility issues, please file a GitHub issue about it here, or even better open a pull request to fix it. Thanks!
 
