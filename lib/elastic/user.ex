@@ -1,4 +1,8 @@
 defmodule Elastic.User do
+  @moduledoc """
+    An API wrapper for dealing with ElasticSearch users.
+  """
+
   alias Elastic.HTTP
   alias Elastic.ResponseHandler
 
