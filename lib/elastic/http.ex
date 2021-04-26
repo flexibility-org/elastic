@@ -130,9 +130,12 @@ defmodule Elastic.HTTP do
       |> Keyword.put(:url, URI.to_string(url))
       |> add_content_type_header
       |> add_aws_header(method, url, body)
-      |> add_basic_auth
 
-    client = Tesla.client([], Tesla.Adapter.Hackney)
+    middlewares = [
+      basic_auth_middleware(options)
+    ]
+
+    client = Tesla.client(middlewares, Tesla.Adapter.Hackney)
     Tesla.request(client, options) |> process_response
   end
 
@@ -162,10 +165,10 @@ defmodule Elastic.HTTP do
     end
   end
 
-  @spec add_basic_auth(Keyword.t()) :: Keyword.t()
-  def add_basic_auth(options) do
-    basic_auth = Keyword.get(options, :basic_auth, Elastic.basic_auth())
-    Keyword.put(options, :basic_auth, basic_auth)
+  @spec basic_auth_middleware(Keyword.t()) :: {atom(), map()}
+  def basic_auth_middleware(options) do
+    {username, password} = Keyword.get(options, :basic_auth, Elastic.basic_auth())
+    {Tesla.Middleware.BasicAuth, %{username: username, password: password}}
   end
 
   @spec process_response(Env.result()) :: ResponseHandler.result()
