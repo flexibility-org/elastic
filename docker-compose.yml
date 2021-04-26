@@ -1,7 +1,7 @@
 version: '3'
 services:
   elasticsearch:
-    image: elasticsearch:7.6.0
+    image: elasticsearch:${ES_VERSION}
     environment:
       - ELASTIC_PASSWORD=password
       - discovery.type=single-node

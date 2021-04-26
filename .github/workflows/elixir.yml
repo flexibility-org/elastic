@@ -65,7 +65,7 @@ jobs:
       run: mix dialyzer --no-check --halt-exit-status
 
     - name: Setup ElasticSearch
-      run: docker run -d --network=host -e 'discovery.type=single-node' -e "ELASTIC_PASSWORD=password" elasticsearch:${{matrix.elasticsearch}}
+      run: ES_VERSION=${{matrix.elasticsearch}} docker-compose up -d
 
     - name: Sleepy Time (Wait for Elastic Search to boot up)
       run: |
