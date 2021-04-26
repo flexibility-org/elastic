@@ -27,4 +27,15 @@ defmodule Elastic.Integration.UserTest do
       assert User.delete(username) == {:ok, 200, %{"found" => true}}
     end
   end
+
+  property "change_password/2 with given username" do
+    check all(
+            username <- valid_username_gen(),
+            max_runs: 10
+          ) do
+      assert User.create(username, "password1") == {:ok, 200, %{"created" => true}}
+      assert User.change_password("password2", username) == {:ok, 200, %{}}
+      assert User.delete(username) == {:ok, 200, %{"found" => true}}
+    end
+  end
 end
