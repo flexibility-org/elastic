@@ -10,8 +10,8 @@ defmodule Elastic.User do
   """
 
   alias Elastic.HTTP
-  alias Elastic.User.Name
   alias Elastic.ResponseHandler
+  alias Elastic.User.Name
 
   @base_url "/_security/user/"
 
