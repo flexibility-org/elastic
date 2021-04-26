@@ -30,8 +30,6 @@ defmodule Elastic.User do
 
   @base_url "/_security/user/"
 
-  @doc """
-  """
   @spec url_encode_username(username :: binary()) :: binary()
   defp url_encode_username(username) do
     URI.encode(username, &URI.char_unreserved?/1)
