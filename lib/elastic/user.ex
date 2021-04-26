@@ -19,11 +19,10 @@ defmodule Elastic.User do
   percent-encoded before being used with the API.
   In particular, this library percent-encodes everything but the
   unreserved URL character set, as defined by [RFC 3986, section
-  2.3](https://tools.ietf.org/html/rfc3986#section-2.3). That is,
-  everything, except the following characters is percent-encoded:
+  2.3](https://tools.ietf.org/html/rfc3986#section-2.3).
 
-  * Alphanumeric ASCII characters: `A-Z`, `a-z`, and `0-9`.
-  * `~`, `_`, `-`, `.`
+  In general however, you hopefully won't have to think about these
+  internals.
   """
 
   alias Elastic.HTTP
