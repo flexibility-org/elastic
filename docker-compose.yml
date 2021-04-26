@@ -1,0 +1,13 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:7.12.0
+    environment:
+      - ELASTIC_PASSWORD=password
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    network_mode: host
