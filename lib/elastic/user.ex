@@ -1,23 +1,23 @@
 defmodule Elastic.User do
   @moduledoc """
-    An API wrapper for dealing with ElasticSearch users.
+  An API wrapper for dealing with ElasticSearch users.
 
-    ## Usernames
+  ## Usernames
 
-    The ElasticSearch Users API, asks for usernames to be supplied
-    as part of a URL path. At the same time, ElasticSearch allows for all
-    sorts of printable ASCII characters in usernames, including ?, /, &,
-    =, and so on.
+  The ElasticSearch Users API, asks for usernames to be supplied as
+  part of a URL path. At the same time, ElasticSearch allows for all
+  sorts of printable ASCII characters in usernames, including `?`, `/`,
+  `&`, `=`, and so on.
 
-    When you pass a username to this module, the username is
-    percent-encoded before being used with the API.
-    In particular, this library percent-encodes everything but the
-    unreserved URL character set, as defined by [RFC 3986, section
-    2.3](https://tools.ietf.org/html/rfc3986#section-2.3). That is,
-    everything, except the following characters is percent-encoded:
+  When you pass a username to this module, the username is
+  percent-encoded before being used with the API.
+  In particular, this library percent-encodes everything but the
+  unreserved URL character set, as defined by [RFC 3986, section
+  2.3](https://tools.ietf.org/html/rfc3986#section-2.3). That is,
+  everything, except the following characters is percent-encoded:
 
-    * Alphanumeric ASCII characters: `A-Z`, `a-z`, and `0-9`.
-    * `~`, `_`, `-`, `.`
+  * Alphanumeric ASCII characters: `A-Z`, `a-z`, and `0-9`.
+  * `~`, `_`, `-`, `.`
   """
 
   alias Elastic.HTTP
