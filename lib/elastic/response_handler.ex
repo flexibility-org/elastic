@@ -11,7 +11,7 @@ defmodule Elastic.ResponseHandler do
   @type result :: {:ok, status(), any()} | error()
 
   @spec process(Env.result()) :: result()
-  def process({:ok, %{body: body, status: status_code}}) when status_code in 400..599 do
+  def process({:ok, %Env{body: body, status: status_code}}) when status_code in 400..599 do
     case decode_body(body) do
       {:ok, decoded_body} ->
         {:error, status_code, decoded_body}
@@ -21,7 +21,7 @@ defmodule Elastic.ResponseHandler do
     end
   end
 
-  def process({:ok, %{body: body, status: status_code}}) do
+  def process({:ok, %Env{body: body, status: status_code}}) do
     case decode_body(body) do
       {:ok, decoded_body} ->
         {:ok, status_code, decoded_body}
