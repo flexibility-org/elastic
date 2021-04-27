@@ -155,6 +155,7 @@ defmodule Elastic.Document.API do
       alias Elastic.HTTP
       alias Elastic.Index
       alias Elastic.Query
+      alias Elastic.ResponseHandler
 
       @spec index(
               id :: binary(),
@@ -194,7 +195,7 @@ defmodule Elastic.Document.API do
       @spec delete(
               id :: binary(),
               es_index :: binary()
-            ) :: ReponseHandler.result()
+            ) :: ResponseHandler.result()
       def delete(id, es_index \\ @es_index) do
         Document.delete(es_index, @es_type, id)
       end
