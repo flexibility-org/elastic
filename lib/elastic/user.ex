@@ -17,12 +17,12 @@ defmodule Elastic.User do
 
   @base_url "/_security/user/"
 
-  @spec create(
+  @spec upsert(
           username :: binary(),
           password :: {:password, binary()} | {:password_hash, binary()},
           roles :: list(binary())
         ) :: ResponseHandler.result()
-  def create(username, password, roles \\ []) do
+  def upsert(username, password, roles \\ []) do
     HTTP.put(@base_url <> Name.url_encode(username),
       body:
         Enum.into([password], %{

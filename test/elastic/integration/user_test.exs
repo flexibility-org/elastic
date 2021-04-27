@@ -25,12 +25,12 @@ defmodule Elastic.Integration.UserTest do
 
   @tag integration: true
 
-  property "basic create/2 and delete/1" do
+  property "basic upsert/2 and delete/1" do
     check all(
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.create(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
+      assert User.upsert(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
       assert User.delete(username) == {:ok, 200, %{"found" => true}}
     end
   end
@@ -40,7 +40,7 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.create(username, {:password, "password1"}) == {:ok, 200, %{"created" => true}}
+      assert User.upsert(username, {:password, "password1"}) == {:ok, 200, %{"created" => true}}
       assert User.change_password("password2", username) == {:ok, 200, %{}}
       assert User.delete(username) == {:ok, 200, %{"found" => true}}
     end
@@ -57,7 +57,7 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.create(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
+      assert User.upsert(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
       {:ok, 200, user} = User.get(username)
       {:ok, kibana_user} = Map.fetch(user, username)
       assert Map.fetch(kibana_user, "username") == {:ok, username}
