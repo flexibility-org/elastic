@@ -41,8 +41,11 @@ defmodule Elastic.Integration.UserTest do
             max_runs: 10
           ) do
       assert User.upsert(username, {:password, "password1"}) == {:ok, 200, %{"created" => true}}
-      assert User.change_password("password2", username) == {:ok, 200, %{}}
-      assert User.delete(username) == {:ok, 200, %{"found" => true}}
+      try do
+        assert User.change_password("password2", username) == {:ok, 200, %{}}
+      after
+        User.delete(username)
+      end
     end
   end
 
@@ -58,10 +61,13 @@ defmodule Elastic.Integration.UserTest do
             max_runs: 10
           ) do
       assert User.upsert(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
-      {:ok, 200, user} = User.get(username)
-      {:ok, kibana_user} = Map.fetch(user, username)
-      assert Map.fetch(kibana_user, "username") == {:ok, username}
-      assert User.delete(username) == {:ok, 200, %{"found" => true}}
+      try do
+        {:ok, 200, user} = User.get(username)
+        {:ok, kibana_user} = Map.fetch(user, username)
+        assert Map.fetch(kibana_user, "username") == {:ok, username}
+      after
+        User.delete(username)
+      end
     end
   end
 end
