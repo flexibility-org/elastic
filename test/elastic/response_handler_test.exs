@@ -1,16 +1,17 @@
 defmodule Elastic.ResponseHandlerTest do
   use ExUnit.Case
   alias Elastic.ResponseHandler
+  alias Tesla.Env
 
   test "handles a 200 response" do
     {:ok, body} = Jason.encode(%{count: 1})
-    response = ResponseHandler.process({:ok, %{body: body, status: 200}})
+    response = ResponseHandler.process({:ok, %Env{body: body, status: 200}})
     assert {:ok, 200, %{"count" => 1}} == response
   end
 
   test "handles a 404 response" do
     {:ok, body} = Jason.encode(%{error: "no such index"})
-    response = ResponseHandler.process({:ok, %{body: body, status: 404}})
+    response = ResponseHandler.process({:ok, %Env{body: body, status: 404}})
     assert {:error, 404, %{"error" => "no such index"}} == response
   end
 
