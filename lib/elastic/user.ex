@@ -19,14 +19,15 @@ defmodule Elastic.User do
 
   @spec create(
           username :: binary(),
-          password :: binary()
+          password :: {:password, binary()} | {:password_hash, binary()},
+          roles :: list(binary())
         ) :: ResponseHandler.result()
-  def create(username, password) do
+  def create(username, password, roles \\ []) do
     HTTP.put(@base_url <> Name.url_encode(username),
-      body: %{
-        password: password,
-        roles: []
-      }
+      body:
+        Enum.into([password], %{
+          roles: roles
+        })
     )
   end
 
