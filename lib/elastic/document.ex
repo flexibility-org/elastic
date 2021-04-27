@@ -5,10 +5,12 @@ defmodule Elastic.Document do
   alias Elastic.Index
   alias Elastic.ResponseHandler
 
+  @type id :: binary() | integer() | atom()
+
   @spec index(
           index :: binary(),
           type :: binary(),
-          id :: binary() | nil,
+          id :: id() | nil,
           data :: term()
         ) :: ResponseHandler.result()
   def index(index, type, id, data) do
@@ -18,7 +20,7 @@ defmodule Elastic.Document do
   @spec update(
           index :: binary(),
           type :: binary(),
-          id :: binary(),
+          id :: id(),
           data :: term()
         ) :: ResponseHandler.result()
   def update(index, type, id, data) do
@@ -31,7 +33,7 @@ defmodule Elastic.Document do
   @spec get(
           index :: binary(),
           type :: binary(),
-          id :: binary()
+          id :: id()
         ) :: ResponseHandler.result()
   def get(index, type, id) do
     document_path(index, type, id) |> HTTP.get()
@@ -40,7 +42,7 @@ defmodule Elastic.Document do
   @spec delete(
           index :: binary(),
           type :: binary(),
-          id :: binary()
+          id :: id()
         ) :: ResponseHandler.result()
   def delete(index, type, id) do
     document_path(index, type, id) |> HTTP.delete()
@@ -49,7 +51,7 @@ defmodule Elastic.Document do
   @spec document_path(
           index :: binary(),
           type :: binary(),
-          id :: binary() | nil
+          id :: id() | nil
         ) :: binary()
   defp document_path(index, type, id) do
     "#{index_name(index)}/#{type}/#{id}"
@@ -58,7 +60,7 @@ defmodule Elastic.Document do
   @spec update_path(
           index :: binary(),
           type :: binary(),
-          id :: binary()
+          id :: id()
         ) :: binary()
   def update_path(index, type, id) do
     document_path(index, type, id) <> "/_update"

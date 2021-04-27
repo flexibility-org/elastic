@@ -158,7 +158,7 @@ defmodule Elastic.Document.API do
       alias Elastic.ResponseHandler
 
       @spec index(
-              id :: binary(),
+              id :: Document.id() | nil,
               data :: term(),
               es_index :: binary()
             ) :: ResponseHandler.result()
@@ -167,7 +167,7 @@ defmodule Elastic.Document.API do
       end
 
       @spec update(
-              id :: binary(),
+              id :: Document.id(),
               data :: term(),
               es_index :: binary()
             ) :: ResponseHandler.result()
@@ -176,7 +176,7 @@ defmodule Elastic.Document.API do
       end
 
       @spec get(
-              id :: binary(),
+              id :: Document.id(),
               es_index :: binary()
             ) :: %__MODULE__{} | nil | ResponseHandler.result()
       def get(id, es_index \\ @es_index) do
@@ -193,7 +193,7 @@ defmodule Elastic.Document.API do
       end
 
       @spec delete(
-              id :: binary(),
+              id :: Document.id(),
               es_index :: binary()
             ) :: ResponseHandler.result()
       def delete(id, es_index \\ @es_index) do
@@ -201,7 +201,7 @@ defmodule Elastic.Document.API do
       end
 
       @spec raw_get(
-              id :: binary(),
+              id :: Document.id(),
               es_index :: binary()
             ) :: ResponseHandler.result()
       def raw_get(id, es_index \\ @es_index) do

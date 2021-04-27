@@ -1,4 +1,5 @@
 defmodule Elastic.Bulk do
+  alias Elastic.Document
   alias Elastic.HTTP
   alias Elastic.ResponseHandler
 
@@ -34,7 +35,7 @@ defmodule Elastic.Bulk do
           {
             index :: binary(),
             type :: binary(),
-            id :: binary(),
+            id :: Document.id(),
             document :: term()
           }
 
@@ -99,7 +100,7 @@ defmodule Elastic.Bulk do
   @spec identifier(
           index :: binary(),
           type :: binary(),
-          id :: binary() | nil
+          id :: Document.id() | nil
         ) :: %{
           required(:_index) => binary(),
           required(:_type) => binary(),
