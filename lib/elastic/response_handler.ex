@@ -7,7 +7,7 @@ defmodule Elastic.ResponseHandler do
   alias Tesla.Env
 
   @type status :: Env.status()
-  @type error :: {:error, status(), %{required(String.t()) => String.t()}}
+  @type error :: {:error, status(), %{required(String.t()) => any()}}
   @type result :: {:ok, status(), any()} | error()
 
   @spec process(Env.result()) :: result()
