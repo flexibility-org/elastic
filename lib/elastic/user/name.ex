@@ -34,6 +34,6 @@ defmodule Elastic.User.Name do
     len = String.length(username)
 
     len > 0 && len <= 1024 &&
-      Regex.run(~r{^[!-~][ -~]+[!-~]$}, username) != nil
+      Regex.run(~r{^[!-~]([ -~]*[!-~])?$}, username) != nil
   end
 end

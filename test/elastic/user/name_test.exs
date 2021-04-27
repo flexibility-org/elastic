@@ -21,6 +21,12 @@ defmodule Elastic.User.NameTest do
       assert Name.is_valid?("") == false
     end
 
+    property "given a short, valid sequence, returns true" do
+      check all(username <- string(@valid_non_infix_chars, min_length: 1, max_length: 3)) do
+        assert Name.is_valid?(username) == true
+      end
+    end
+
     property "given a string with leading spaces, returns false" do
       check all(
               text <- string(@valid_non_infix_chars, min_length: 1, max_length: 1024),
