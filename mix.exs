@@ -44,7 +44,7 @@ defmodule Elastic.Mixfile do
     [
       {:tesla, "~> 1.4.0"},
       {:hackney, "~> 1.17.0"},
-      {:jason, "~> 1.1.2"},
+      {:jason, "~> 1.1"},
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
       {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
