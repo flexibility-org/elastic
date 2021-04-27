@@ -41,6 +41,7 @@ defmodule Elastic.Integration.UserTest do
             max_runs: 10
           ) do
       assert User.upsert(username, {:password, "password1"}) == {:ok, 200, %{"created" => true}}
+
       try do
         assert User.change_password("password2", username) == {:ok, 200, %{}}
       after
@@ -61,6 +62,7 @@ defmodule Elastic.Integration.UserTest do
             max_runs: 10
           ) do
       assert User.upsert(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
+
       try do
         {:ok, 200, user} = User.get(username)
         {:ok, kibana_user} = Map.fetch(user, username)
