@@ -30,10 +30,7 @@ defmodule Elastic.Mixfile do
 
   def application do
     [
-      applications: [:logger, :tesla, :hackney, :aws_auth, :jason],
-      extra_applications: [
-        :stream_data
-      ]
+      applications: [:logger, :tesla, :hackney, :aws_auth, :jason]
     ]
   end
 
