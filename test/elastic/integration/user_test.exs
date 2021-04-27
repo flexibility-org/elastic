@@ -51,4 +51,17 @@ defmodule Elastic.Integration.UserTest do
     {:ok, kibana_user} = Map.fetch(user, "kibana")
     assert Map.fetch(kibana_user, "username") == {:ok, "kibana"}
   end
+
+  property "get/1 yields recently created user" do
+    check all(
+            username <- valid_username_gen(),
+            max_runs: 10
+          ) do
+      assert User.create(username, "password1") == {:ok, 200, %{"created" => true}}
+      {:ok, 200, user} = User.get(username)
+      {:ok, kibana_user} = Map.fetch(user, username)
+      assert Map.fetch(kibana_user, "username") == {:ok, username}
+      assert User.delete(username) == {:ok, 200, %{"found" => true}}
+    end
+  end
 end
