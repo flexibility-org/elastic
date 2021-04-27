@@ -6,6 +6,7 @@ defmodule Elastic.User do
   [ElasticSearch REST API](https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html):
 
   * [Create or update users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-user.html)
+  * [Get users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-user.html)
   * [Change passwords API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-change-password.html)
   * [Delete users API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-delete-user.html)
   """
@@ -52,5 +53,16 @@ defmodule Elastic.User do
   @spec delete(username :: binary()) :: ResponseHandler.result()
   def delete(username) do
     HTTP.delete(@base_url <> Name.url_encode(username))
+  end
+
+  @spec get(username :: binary() | nil) :: ResponseHandler.result()
+  def get(username \\ nil) do
+    url =
+      case username do
+        nil -> ""
+        _ -> Name.url_encode(username)
+      end
+
+    HTTP.get(@base_url <> url)
   end
 end
