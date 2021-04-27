@@ -8,7 +8,7 @@ defmodule Elastic.Document do
   @spec index(
           index :: binary(),
           type :: binary(),
-          id :: binary(),
+          id :: binary() | nil,
           data :: term()
         ) :: ResponseHandler.result()
   def index(index, type, id, data) do
@@ -49,7 +49,7 @@ defmodule Elastic.Document do
   @spec document_path(
           index :: binary(),
           type :: binary(),
-          id :: binary()
+          id :: binary() | nil
         ) :: binary()
   defp document_path(index, type, id) do
     "#{index_name(index)}/#{type}/#{id}"
