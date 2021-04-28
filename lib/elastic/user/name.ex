@@ -27,13 +27,20 @@ defmodule Elastic.User.Name do
     A [valid ElasticSearch
     username](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-put-user.html#security-api-put-user-path-params)
     is between 1 and 1024 characters, each being a printable ASCII
-    character, with no leading og trailing spaces.
+    character, with no leading og trailing spaces. This wrapper
+    further disallows the commas (`,`) in usernames.
+
+    The last restriction is due to the fact that the [Get users
+    API](https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-get-user.html)
+    allows one to _get_ multiple users by listing the usernames separated
+    by a comma. To our knowledge, there is no way to escape a comma in a
+    username, so it is intentionally disallowed in usernames instead.
   """
   @spec is_valid?(username :: binary()) :: boolean()
   def is_valid?(username) do
     len = String.length(username)
 
     len > 0 && len <= 1024 &&
-      Regex.run(~r{^[!-~]([ -~]*[!-~])?$}, username) != nil
+      Regex.run(~r{^[!-+\--~]([ -+\--~]*[!-+\--~])?$}, username) != nil
   end
 end

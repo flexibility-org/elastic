@@ -4,11 +4,11 @@ defmodule Elastic.User.NameTest do
 
   alias Elastic.User.Name
 
-  @valid_non_infix_chars 0x21..0x7E
+  @valid_non_infix_chars [0x21..0x2B, 0x2D..0x7E]
 
   def valid_username_gen do
     gen all(
-          text <- string(0x20..0x7E, min_length: 1, max_length: 341),
+          text <- string([0x20..0x2B, 0x2D..0x7E], min_length: 1, max_length: 341),
           prefix <- string(@valid_non_infix_chars, min_length: 1, max_length: 341),
           postfix <- string(@valid_non_infix_chars, min_length: 1, max_length: 341)
         ) do
@@ -19,6 +19,42 @@ defmodule Elastic.User.NameTest do
   describe "is_valid_username?/1" do
     test "given empty string, returns false" do
       assert Name.is_valid?("") == false
+    end
+
+    test "given a comma, returns false" do
+      assert Name.is_valid?(",") == false
+    end
+
+    property "given name starting with a comma, returns false" do
+      check all(chars <- string(@valid_non_infix_chars, min_length: 1, max_length: 1023)) do
+        assert Name.is_valid?("," <> chars) == false
+      end
+    end
+
+    property "given name ending with a comma, returns false" do
+      check all(chars <- string(@valid_non_infix_chars, min_length: 1, max_length: 1023)) do
+        assert Name.is_valid?(chars <> ",") == false
+      end
+    end
+
+    property "given a name containing some commas, returns false" do
+      check all(
+              length <- integer(1..200),
+              n_commas <- integer(1..length),
+              n_chars = length - n_commas,
+              rest_chars <- string(@valid_non_infix_chars, length: n_chars),
+              comma_indices <- list_of(integer(0..n_chars), length: n_commas)
+            ) do
+        name =
+          comma_indices
+          |> List.foldl(
+            String.to_charlist(rest_chars),
+            fn ndx, text -> List.insert_at(text, ndx, ',') end
+          )
+          |> List.to_string()
+
+        assert Name.is_valid?(name) == false
+      end
     end
 
     property "given a short, valid sequence, returns true" do
