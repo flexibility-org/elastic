@@ -4,7 +4,6 @@ services:
     image: elasticsearch:${ES_VERSION}
     environment:
       - ELASTIC_PASSWORD=password
+      - xpack.security.enabled=true
       - discovery.type=single-node
-    volumes:
-      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     network_mode: host
