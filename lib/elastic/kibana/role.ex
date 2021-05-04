@@ -21,15 +21,18 @@ defmodule Elastic.Kibana.Role do
           name :: binary(),
           kibana_privileges :: list(any())
         ) :: ResponseHandler.result()
-  def upsert(name, kibana_privileges) do
+  def upsert(name, kibana_privileges \\ []) do
     HTTP.put(@base_url <> Name.url_encode(name),
-      body: %{kibana: kibana_privileges}
+      body: %{kibana: kibana_privileges},
+      middlewares: [HTTP.kibana_middleware()]
     )
   end
 
   @spec delete(name :: binary()) :: ResponseHandler.result()
   def delete(name) do
-    HTTP.delete(@base_url <> Name.url_encode(name))
+    HTTP.delete(@base_url <> Name.url_encode(name),
+      middlewares: [HTTP.kibana_middleware()]
+    )
   end
 
   @spec get(name :: binary() | nil) :: ResponseHandler.result()
