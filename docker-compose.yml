@@ -1,3 +1,6 @@
+# This file is heavily inspired by
+# https://codingfundas.com/setting-up-elasticsearch-and-kibana-on-docker-with-x-pack-security-enabled/
+
 version: '3'
 services:
   elasticsearch:
@@ -6,4 +9,16 @@ services:
       - ELASTIC_PASSWORD=password
       - xpack.security.enabled=true
       - discovery.type=single-node
-    network_mode: host
+    ports:
+      - 9200:9200
+    volumes:
+      - ./docker/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./docker/elastic-certificates.p12:/usr/share/elasticsearch/config/elastic-certificates.p12
+  kibana:
+    image: kibana:${KIBANA_VERSION}
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+    volumes:
+      - ./docker/kibana.yml:/usr/share/kibana/config/kibana.yml

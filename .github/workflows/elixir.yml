@@ -13,8 +13,14 @@ jobs:
         elixir:
           - 1.9.4
           - 1.10.1
+
+# For a list of compatible ElasticSearch+Kibana versions, see
+# https://www.elastic.co/support/matrix#matrix_compatibility
         elasticsearch:
           - 7.6.0
+        kibana:
+          - 7.6.2
+
         otp:
           - 22.2
           - 23.0
@@ -64,7 +70,7 @@ jobs:
       run: mix dialyzer --no-check --halt-exit-status
 
     - name: Setup ElasticSearch
-      run: ES_VERSION=${{matrix.elasticsearch}} docker-compose up -d
+      run: ES_VERSION=${{matrix.elasticsearch}} KIBANA_VERSION=${{matrix.kibana}} docker-compose up -d
 
     - name: Sleepy Time (Wait for Elastic Search to boot up)
       run: |
