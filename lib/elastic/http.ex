@@ -120,9 +120,11 @@ defmodule Elastic.HTTP do
       |> add_content_type_header
       |> add_aws_header(method, url, body)
 
-    middlewares = [
-      basic_auth_middleware(options)
-    ]
+    middlewares =
+      Keyword.get(options, :middlewares, []) ++
+        [
+          basic_auth_middleware(options)
+        ]
 
     client = Tesla.client(middlewares, Tesla.Adapter.Hackney)
     Tesla.request(client, options) |> process_response
@@ -158,6 +160,11 @@ defmodule Elastic.HTTP do
   def basic_auth_middleware(options) do
     {username, password} = Keyword.get(options, :basic_auth, Elastic.basic_auth())
     {Tesla.Middleware.BasicAuth, %{username: username, password: password}}
+  end
+
+  @spec kibana_middleware() :: {atom(), list({binary(), binary()})}
+  def kibana_middleware do
+    {Tesla.Middleware.Headers, [{"kbn-xsrf", "true"}]}
   end
 
   @spec process_response(Env.result()) :: ResponseHandler.result()
