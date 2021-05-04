@@ -6,17 +6,19 @@ defmodule Elastic.Integration.IndexTest do
   test "close/1 & open/1" do
     Answer.index(1, %{text: "Hello world!"})
 
-    cat_result = get_index_response(HTTP.get("_cat/indices?format=json"), Index.name("answer"))
+    url = Elastic.base_url() <> "/_cat/indices?format=json"
+
+    cat_result = get_index_response(HTTP.get(url), Index.name("answer"))
     assert %{"status" => "open"} = cat_result
 
     Index.close("answer")
 
-    cat_result = get_index_response(HTTP.get("_cat/indices?format=json"), Index.name("answer"))
+    cat_result = get_index_response(HTTP.get(url), Index.name("answer"))
     assert %{"status" => "close"} = cat_result
 
     Index.open("answer")
 
-    cat_result = get_index_response(HTTP.get("_cat/indices?format=json"), Index.name("answer"))
+    cat_result = get_index_response(HTTP.get(url), Index.name("answer"))
     assert %{"status" => "open"} = cat_result
   end
 

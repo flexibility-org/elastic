@@ -41,7 +41,24 @@ defmodule Elastic do
 
   @spec base_url() :: term()
   def base_url do
-    Application.get_env(:elastic, :base_url)
+    url = Application.get_env(:elastic, :base_url)
+
+    if is_binary(url) do
+      url
+    else
+      "http://localhost:9200"
+    end
+  end
+
+  @spec base_kibana_url() :: term()
+  def base_kibana_url do
+    url = Application.get_env(:elastic, :base_kibana_url)
+
+    if is_binary(url) do
+      url
+    else
+      "http://localhost:5601"
+    end
   end
 
   @spec basic_auth() :: term()

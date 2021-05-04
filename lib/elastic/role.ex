@@ -14,7 +14,7 @@ defmodule Elastic.Role do
   alias Elastic.ResponseHandler
   alias Elastic.User.Name
 
-  @base_url "/_security/role/"
+  @base_url Elastic.base_url() <> "/_security/role/"
 
   @spec upsert(
           name :: binary(),

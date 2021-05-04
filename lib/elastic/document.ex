@@ -54,7 +54,7 @@ defmodule Elastic.Document do
           id :: id() | nil
         ) :: binary()
   defp document_path(index, type, id) do
-    "#{index_name(index)}/#{type}/#{id}"
+    Elastic.base_url() <> "/#{index_name(index)}/#{type}/#{id}"
   end
 
   @spec update_path(

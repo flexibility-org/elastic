@@ -8,7 +8,8 @@ defmodule Elastic.Scroll do
   alias Elastic.HTTP
   alias Elastic.Index
   alias Elastic.ResponseHandler
-  @scroll_endpoint "_search/scroll"
+
+  @scroll_endpoint Elastic.base_url() <> "/_search/scroll"
 
   @doc ~S"""
     Starts a new scroll using [ElasticSearch's scroll endpoint](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/search-request-scroll.html#search-request-scroll).
@@ -30,7 +31,8 @@ defmodule Elastic.Scroll do
         }) :: ResponseHandler.result()
   def start(%{index: index, body: body, size: size, keepalive: keepalive}) do
     body = body |> Map.merge(%{size: size})
-    HTTP.get("#{Index.name(index)}/_search?scroll=#{keepalive}", body: body)
+    url = Elastic.base_url() <> "/#{Index.name(index)}/_search?scroll=#{keepalive}"
+    HTTP.get(url, body: body)
   end
 
   @doc ~S"""

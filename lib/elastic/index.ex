@@ -19,6 +19,15 @@ defmodule Elastic.Index do
   end
 
   @doc """
+  Wrapper function, for constructing an ElasticSearch REST API URL
+  from an already constructed path, query parameters, etc.
+  """
+  @spec url(binary()) :: binary()
+  def url(path_query) do
+    Elastic.base_url() <> "/" <> path_query
+  end
+
+  @doc """
   Creates the specified index.
   If you've configured `index_prefix` and `use_mix_env` for Elastic, it will use those.
 
@@ -33,7 +42,7 @@ defmodule Elastic.Index do
   """
   @spec create(binary()) :: ResponseHandler.result()
   def create(index) do
-    HTTP.put(name(index))
+    HTTP.put(name(index) |> url)
   end
 
   @doc """
@@ -54,7 +63,7 @@ defmodule Elastic.Index do
 
   @spec create(binary(), any()) :: ResponseHandler.result()
   def create(index, parameters) do
-    HTTP.put(name(index), body: parameters)
+    HTTP.put(name(index) |> url, body: parameters)
   end
 
   @doc """
@@ -73,7 +82,7 @@ defmodule Elastic.Index do
   """
   @spec delete(binary()) :: ResponseHandler.result()
   def delete(index) do
-    index |> name |> HTTP.delete()
+    index |> name |> url |> HTTP.delete()
   end
 
   @doc """
@@ -81,7 +90,7 @@ defmodule Elastic.Index do
   """
   @spec refresh(binary()) :: ResponseHandler.result()
   def refresh(index) do
-    HTTP.post("#{name(index)}/_refresh")
+    HTTP.post("#{name(index)}/_refresh" |> url)
   end
 
   @doc """
@@ -90,7 +99,7 @@ defmodule Elastic.Index do
   """
   @spec exists?(binary()) :: boolean()
   def exists?(index) do
-    {_, status, _} = index |> name |> HTTP.head()
+    {_, status, _} = index |> name |> url |> HTTP.head()
     status == 200
   end
 
@@ -99,7 +108,7 @@ defmodule Elastic.Index do
   """
   @spec open(binary()) :: ResponseHandler.result()
   def open(index) do
-    HTTP.post("#{name(index)}/_open")
+    HTTP.post("#{name(index)}/_open" |> url)
   end
 
   @doc """
@@ -107,19 +116,19 @@ defmodule Elastic.Index do
   """
   @spec close(binary()) :: ResponseHandler.result()
   def close(index) do
-    HTTP.post("#{name(index)}/_close")
+    HTTP.post("#{name(index)}/_close" |> url)
   end
 
   @doc false
   @spec search(%Query{}) :: ResponseHandler.result()
   def search(%Query{index: index, body: body}) do
-    HTTP.get("#{name(index)}/_search", body: body)
+    HTTP.get("#{name(index)}/_search" |> url, body: body)
   end
 
   @doc false
   @spec count(%Query{}) :: ResponseHandler.result()
   def count(%Query{index: index, body: body}) do
-    HTTP.get("#{name(index)}/_count", body: body)
+    HTTP.get("#{name(index)}/_count" |> url, body: body)
   end
 
   @spec index_prefix() :: term()

@@ -9,7 +9,7 @@ defmodule Elastic.HTTP do
   For example, a request like this:
 
   ```elixir
-    Elastic.HTTP.get("/answer/_search")
+    Elastic.HTTP.get(Elastic.base_url() <> "/answer/_search")
   ```
 
   Would return a response like this:
@@ -42,7 +42,7 @@ defmodule Elastic.HTTP do
   Makes a request using the GET HTTP method, and can take a body.
 
   ```
-  Elastic.HTTP.get("/answer/_search", body: %{query: ...})
+  Elastic.HTTP.get(Elastic.base_url() <> "/answer/_search", body: %{query: ...})
   ```
 
   """
@@ -101,25 +101,14 @@ defmodule Elastic.HTTP do
   def bulk(options) do
     body = Keyword.get(options, :body, "") <> "\n"
     options = Keyword.put(options, :body, body)
-    request(:post, "_bulk", options)
-  end
-
-  @spec base_url() :: binary()
-  defp base_url do
-    base_url = Elastic.base_url()
-
-    if is_binary(base_url) do
-      base_url
-    else
-      "http://localhost:9200"
-    end
+    url = Elastic.base_url() <> "/_bulk"
+    request(:post, url, options)
   end
 
   @spec request(method(), url(), Keyword.t()) :: ResponseHandler.result()
   defp request(method, url, options) do
     body = Keyword.get(options, :body, []) |> encode_body
     timeout = Application.get_env(:elastic, :timeout, 30_000)
-    url = URI.merge(base_url(), url)
 
     options =
       options
@@ -127,7 +116,7 @@ defmodule Elastic.HTTP do
       |> Keyword.put(:body, body)
       |> Keyword.put(:timeout, timeout)
       |> Keyword.put(:method, method)
-      |> Keyword.put(:url, URI.to_string(url))
+      |> Keyword.put(:url, url)
       |> add_content_type_header
       |> add_aws_header(method, url, body)
 

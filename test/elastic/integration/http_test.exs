@@ -16,7 +16,8 @@ defmodule Elastic.Integration.HTTPTest do
     {"query" : {"match_all" : {}}, "from" : 0, "size" : 10}
     """
 
-    {:ok, 200, data} = HTTP.get("/_msearch", body: ndjson_string)
+    url = Elastic.base_url() <> "/_msearch"
+    {:ok, 200, data} = HTTP.get(url, body: ndjson_string)
     %{"responses" => [%{"hits" => %{"hits" => [doc]}}]} = data
 
     assert doc["_id"] == "1"
