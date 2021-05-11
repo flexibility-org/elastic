@@ -31,8 +31,11 @@ defmodule Elastic.Integration.RoleTest do
             name <- valid_name_gen(),
             max_runs: 10
           ) do
-      assert Role.upsert(name, %{indices: []}) == {:ok, :created}
-      assert Role.delete(name) == :ok
+      try do
+        assert Role.upsert(name, %{indices: []}) == {:ok, :created}
+      after
+        assert Role.delete(name) == :ok
+      end
     end
   end
 
@@ -41,9 +44,12 @@ defmodule Elastic.Integration.RoleTest do
             name <- valid_name_gen(),
             max_runs: 10
           ) do
-      assert Role.upsert(name, %{indices: []}) == {:ok, :created}
-      assert Role.delete(name) == :ok
-      assert Role.delete(name) == {:error, :not_found}
+      try do
+        assert Role.upsert(name, %{indices: []}) == {:ok, :created}
+      after
+        assert Role.delete(name) == :ok
+        assert Role.delete(name) == {:error, :not_found}
+      end
     end
   end
 
@@ -52,8 +58,12 @@ defmodule Elastic.Integration.RoleTest do
             name <- valid_name_gen(),
             max_runs: 10
           ) do
-      assert Role.upsert(name, %{indices: []}) == {:ok, :created}
-      assert Role.upsert(name, %{indices: []}) == {:ok, :updated}
+      try do
+        assert Role.upsert(name, %{indices: []}) == {:ok, :created}
+        assert Role.upsert(name, %{indices: []}) == {:ok, :updated}
+      after
+        Role.delete(name)
+      end
     end
   end
 end
