@@ -31,16 +31,29 @@ defmodule Elastic.Integration.RoleTest do
             name <- valid_name_gen(),
             max_runs: 10
           ) do
-      assert Role.upsert(name, %{
-               indices: [
-                 %{
-                   names: ["answer"],
-                   privileges: ["read"]
-                 }
-               ]
-             }) == {:ok, :created}
-
+      assert Role.upsert(name, %{indices: []}) == {:ok, :created}
       assert Role.delete(name) == :ok
+    end
+  end
+
+  property "second delete/1 fails" do
+    check all(
+            name <- valid_name_gen(),
+            max_runs: 10
+          ) do
+      assert Role.upsert(name, %{indices: []}) == {:ok, :created}
+      assert Role.delete(name) == :ok
+      assert Role.delete(name) == {:error, :not_found}
+    end
+  end
+
+  property "second upsert/2 updates" do
+    check all(
+            name <- valid_name_gen(),
+            max_runs: 10
+          ) do
+      assert Role.upsert(name, %{indices: []}) == {:ok, :created}
+      assert Role.upsert(name, %{indices: []}) == {:ok, :updated}
     end
   end
 end
