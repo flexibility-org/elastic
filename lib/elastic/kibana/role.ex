@@ -20,22 +20,43 @@ defmodule Elastic.Kibana.Role do
   @spec upsert(
           name :: binary(),
           kibana_privileges :: list(any())
-        ) :: ResponseHandler.result()
+        ) :: :ok | ResponseHandler.unknown_response_value()
   def upsert(name, kibana_privileges \\ []) do
-    HTTP.put(@base_url <> Name.url_encode(name),
-      body: %{kibana: kibana_privileges},
-      middlewares: [HTTP.kibana_middleware()]
-    )
+    response =
+      HTTP.put(@base_url <> Name.url_encode(name),
+        body: %{kibana: kibana_privileges},
+        middlewares: [HTTP.kibana_middleware()]
+      )
+
+    case response do
+      {:ok, 204, ""} ->
+        :ok
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 
-  @spec delete(name :: binary()) :: ResponseHandler.result()
+  @spec delete(name :: binary()) :: ResponseHandler.find_result()
   def delete(name) do
-    HTTP.delete(@base_url <> Name.url_encode(name),
-      middlewares: [HTTP.kibana_middleware()]
-    )
+    response =
+      HTTP.delete(@base_url <> Name.url_encode(name),
+        middlewares: [HTTP.kibana_middleware()]
+      )
+
+    case response do
+      {:ok, 204, ""} ->
+        :ok
+
+      {:error, 404, %{"error" => "Not Found"}} ->
+        {:error, :not_found}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 
-  @spec get(name :: binary() | nil) :: ResponseHandler.result()
+  @spec get(name :: binary() | nil) :: {:ok, map()} | ResponseHandler.find_error()
   def get(name \\ nil) do
     url =
       case name do
@@ -43,6 +64,17 @@ defmodule Elastic.Kibana.Role do
         _ -> @base_url <> Name.url_encode(name)
       end
 
-    HTTP.get(url)
+    response = HTTP.get(url)
+
+    case response do
+      {:ok, 200, role} ->
+        {:ok, role}
+
+      {:ok, 404, %{"error" => "Not Found"}} ->
+        {:error, :not_found}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 end

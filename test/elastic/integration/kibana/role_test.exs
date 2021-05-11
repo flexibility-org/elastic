@@ -30,8 +30,53 @@ defmodule Elastic.Integration.Kibana.RoleTest do
             name <- valid_name_gen(),
             max_runs: 10
           ) do
-      assert Role.upsert(name) == {:ok, 204, ""}
-      assert Role.delete(name) == {:ok, 204, ""}
+      try do
+        assert Role.upsert(name) == :ok
+      after
+        assert Role.delete(name) == :ok
+      end
+    end
+  end
+
+  property "second delete/1 fails" do
+    check all(
+            name <- valid_name_gen(),
+            max_runs: 10
+          ) do
+      try do
+        assert Role.upsert(name) == :ok
+      after
+        assert Role.delete(name) == :ok
+        assert Role.delete(name) == {:error, :not_found}
+      end
+    end
+  end
+
+  property "second upsert/2 is ok" do
+    check all(
+            name <- valid_name_gen(),
+            max_runs: 10
+          ) do
+      try do
+        assert Role.upsert(name) == :ok
+        assert Role.upsert(name) == :ok
+      after
+        Role.delete(name)
+      end
+    end
+  end
+
+  property "basic upsert/2 and get/1" do
+    check all(
+            name <- valid_name_gen(),
+            max_runs: 10
+          ) do
+      try do
+        assert Role.upsert(name) == :ok
+        assert {:ok, %{"name" => ^name}} = Role.get(name)
+      after
+        Role.delete(name)
+      end
     end
   end
 end
