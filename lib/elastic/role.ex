@@ -19,19 +19,32 @@ defmodule Elastic.Role do
   @spec upsert(
           name :: binary(),
           body :: map()
-        ) :: ResponseHandler.result()
+        ) :: ResponseHandler.upsert_result()
   def upsert(name, body) do
-    HTTP.put(@base_url <> Name.url_encode(name),
-      body: body
-    )
+    response =
+      HTTP.put(@base_url <> Name.url_encode(name),
+        body: body
+      )
+
+    case response do
+      {:ok, 200, %{"role" => %{"created" => true}}} ->
+        {:ok, :created}
+
+      {:ok, 200, %{"role" => %{"created" => false}}} ->
+        {:ok, :updated}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 
-  @spec delete(name :: binary()) :: ResponseHandler.result()
+  @spec delete(name :: binary()) :: ResponseHandler.find_result()
   def delete(name) do
     HTTP.delete(@base_url <> Name.url_encode(name))
+    |> ResponseHandler.process_find_response()
   end
 
-  @spec get(name :: binary() | nil) :: ResponseHandler.result()
+  @spec get(name :: binary() | nil) :: {:ok, map()} | ResponseHandler.find_error()
   def get(name \\ nil) do
     url =
       case name do
@@ -39,6 +52,17 @@ defmodule Elastic.Role do
         _ -> Name.url_encode(name)
       end
 
-    HTTP.get(@base_url <> url)
+    response = HTTP.get(@base_url <> url)
+
+    case response do
+      {:ok, 200, roles} ->
+        {:ok, roles}
+
+      {:error, 404, %{}} ->
+        {:error, :not_found}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 end

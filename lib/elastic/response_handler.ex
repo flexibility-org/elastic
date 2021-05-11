@@ -61,6 +61,27 @@ defmodule Elastic.ResponseHandler do
      }}
   end
 
+  @type unknown_response_value :: {:unknown_response, tuple_error()}
+  @type find_error :: {:error, :not_found | unknown_response_value()}
+  @type find_result :: :ok | find_error()
+
+  @spec process_find_response(result()) :: find_result()
+  def process_find_response(response) do
+    case response do
+      {:ok, 200, %{"found" => true}} ->
+        :ok
+
+      {:error, 404, %{"found" => false}} ->
+        {:error, :not_found}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
+  end
+
+  @type upsert_error :: {:error, unknown_response_value()}
+  @type upsert_result :: {:ok, :created | :updated} | upsert_error()
+
   @spec json_error(DecodeError.t()) :: error()
   defp json_error(error) do
     {:error, 0,

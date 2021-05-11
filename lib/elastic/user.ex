@@ -21,14 +21,26 @@ defmodule Elastic.User do
           username :: binary(),
           password :: {:password, binary()} | {:password_hash, binary()},
           roles :: list(binary())
-        ) :: ResponseHandler.result()
+        ) :: ResponseHandler.upsert_result()
   def upsert(username, password, roles \\ []) do
-    HTTP.put(@base_url <> Name.url_encode(username),
-      body:
-        Enum.into([password], %{
-          roles: roles
-        })
-    )
+    response =
+      HTTP.put(@base_url <> Name.url_encode(username),
+        body:
+          Enum.into([password], %{
+            roles: roles
+          })
+      )
+
+    case response do
+      {:ok, 200, %{"created" => true}} ->
+        {:ok, :created}
+
+      {:ok, 200, %{"created" => false}} ->
+        {:ok, :updated}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 
   @doc """
@@ -40,7 +52,7 @@ defmodule Elastic.User do
   @spec change_password(
           new_password :: binary(),
           username :: binary() | nil
-        ) :: ResponseHandler.result()
+        ) :: ResponseHandler.find_result()
   def change_password(new_password, username \\ nil) do
     url =
       case username do
@@ -48,15 +60,32 @@ defmodule Elastic.User do
         _ -> Name.url_encode(username) <> "/_password"
       end
 
-    HTTP.post(@base_url <> url, body: %{password: new_password})
+    response = HTTP.post(@base_url <> url, body: %{password: new_password})
+
+    case response do
+      {:ok, 200, %{}} ->
+        :ok
+
+      {:error, 400,
+       %{
+         "error" => %{
+           "reason" => "Validation Failed: 1: user must exist in order to change password;"
+         }
+       }} ->
+        {:error, :not_found}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 
-  @spec delete(username :: binary()) :: ResponseHandler.result()
+  @spec delete(username :: binary()) :: ResponseHandler.find_result()
   def delete(username) do
     HTTP.delete(@base_url <> Name.url_encode(username))
+    |> ResponseHandler.process_find_response()
   end
 
-  @spec get(username :: binary() | nil) :: ResponseHandler.result()
+  @spec get(username :: binary() | nil) :: {:ok, map()} | ResponseHandler.find_error()
   def get(username \\ nil) do
     url =
       case username do
@@ -64,6 +93,17 @@ defmodule Elastic.User do
         _ -> Name.url_encode(username)
       end
 
-    HTTP.get(@base_url <> url)
+    response = HTTP.get(@base_url <> url)
+
+    case response do
+      {:ok, 200, users} ->
+        {:ok, users}
+
+      {:error, 404, %{}} ->
+        {:error, :not_found}
+
+      {_, status_code, data} ->
+        {:error, {:unknown_response, {status_code, data}}}
+    end
   end
 end

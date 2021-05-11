@@ -30,8 +30,8 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.upsert(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
-      assert User.delete(username) == {:ok, 200, %{"found" => true}}
+      assert User.upsert(username, {:password, "password"}) == {:ok, :created}
+      assert User.delete(username) == :ok
     end
   end
 
@@ -40,10 +40,10 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.upsert(username, {:password, "password1"}) == {:ok, 200, %{"created" => true}}
+      assert User.upsert(username, {:password, "password1"}) == {:ok, :created}
 
       try do
-        assert User.change_password("password2", username) == {:ok, 200, %{}}
+        assert User.change_password("password2", username) == :ok
       after
         User.delete(username)
       end
@@ -51,7 +51,7 @@ defmodule Elastic.Integration.UserTest do
   end
 
   test "get/1 can return kibana user" do
-    {:ok, 200, user} = User.get("kibana")
+    {:ok, user} = User.get("kibana")
     {:ok, kibana_user} = Map.fetch(user, "kibana")
     assert Map.fetch(kibana_user, "username") == {:ok, "kibana"}
   end
@@ -61,10 +61,10 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.upsert(username, {:password, "password"}) == {:ok, 200, %{"created" => true}}
+      assert User.upsert(username, {:password, "password"}) == {:ok, :created}
 
       try do
-        {:ok, 200, user} = User.get(username)
+        {:ok, user} = User.get(username)
         {:ok, kibana_user} = Map.fetch(user, username)
         assert Map.fetch(kibana_user, "username") == {:ok, username}
       after

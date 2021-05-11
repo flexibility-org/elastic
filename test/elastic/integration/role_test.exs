@@ -38,9 +38,9 @@ defmodule Elastic.Integration.RoleTest do
                    privileges: ["read"]
                  }
                ]
-             }) == {:ok, 200, %{"role" => %{"created" => true}}}
+             }) == {:ok, :created}
 
-      assert Role.delete(name) == {:ok, 200, %{"found" => true}}
+      assert Role.delete(name) == :ok
     end
   end
 end
