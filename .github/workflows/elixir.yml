@@ -76,7 +76,7 @@ jobs:
       run: |
         git clone https://github.com/vishnubob/wait-for-it
         ./wait-for-it/wait-for-it.sh -t 30 localhost:9200
-        ./wait-for-it/wait-for-it.sh -t 30 localhost:5601
+        ./docker/wait_for_kibana.sh
 
     - name: Run Tests
       run: mix test --include integration
