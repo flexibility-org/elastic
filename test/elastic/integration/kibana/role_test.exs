@@ -5,14 +5,17 @@ defmodule Elastic.Integration.Kibana.RoleTest do
 
   alias Elastic.Kibana.Role
 
-  @valid_non_infix_chars [0x21..0x7E]
+  @valid_non_infix_chars [0x21..0x2B, 0x2D..0x7E]
 
   @doc """
   Generate a valid Kibana role name
+
+  NB! Comma(,), although allowed when creating a role, leads to odd
+  behaviour when dealing with such roles.
   """
   def valid_name_gen do
     gen all(
-          text <- string([0x20..0x7E], min_length: 1, max_length: 341),
+          text <- string([0x20..0x2B, 0x2D..0x7E], min_length: 1, max_length: 341),
           prefix <- string(@valid_non_infix_chars, min_length: 1, max_length: 341),
           postfix <- string(@valid_non_infix_chars, min_length: 1, max_length: 341)
         ) do
