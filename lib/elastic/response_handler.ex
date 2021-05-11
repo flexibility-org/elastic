@@ -8,6 +8,7 @@ defmodule Elastic.ResponseHandler do
 
   @type status :: Env.status()
   @type error :: {:error, status(), %{required(String.t()) => any()}}
+  @type tuple_error :: {status(), %{required(String.t()) => any()}}
   @type result :: {:ok, status(), any()} | error()
 
   @spec process(Env.result()) :: result()
