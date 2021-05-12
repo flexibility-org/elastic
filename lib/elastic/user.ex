@@ -20,15 +20,12 @@ defmodule Elastic.User do
   @spec upsert(
           username :: binary(),
           password :: {:password, binary()} | {:password_hash, binary()},
-          roles :: list(binary())
+          body :: %{roles: list(binary())}
         ) :: ResponseHandler.upsert_result()
-  def upsert(username, password, roles \\ []) do
+  def upsert(username, password, body \\ %{roles: []}) do
     response =
       HTTP.put(@base_url <> Name.url_encode(username),
-        body:
-          Enum.into([password], %{
-            roles: roles
-          })
+        body: Enum.into([password], body)
       )
 
     case response do
