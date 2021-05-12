@@ -28,7 +28,7 @@ defmodule Elastic.User do
           Enum.into(
             body,
             %{
-              roles: []
+              "roles" => []
             }
           )
       )
