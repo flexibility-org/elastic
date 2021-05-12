@@ -30,7 +30,7 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.upsert(username, {:password, "password"}) == {:ok, :created}
+      assert User.upsert(username, %{password: "password"}) == {:ok, :created}
       assert User.delete(username) == :ok
     end
   end
@@ -40,7 +40,7 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.upsert(username, {:password, "password1"}) == {:ok, :created}
+      assert User.upsert(username, %{password: "password1"}) == {:ok, :created}
 
       try do
         assert User.change_password("password2", username) == :ok
@@ -61,7 +61,7 @@ defmodule Elastic.Integration.UserTest do
             username <- valid_username_gen(),
             max_runs: 10
           ) do
-      assert User.upsert(username, {:password, "password"}) == {:ok, :created}
+      assert User.upsert(username, %{password: "password"}) == {:ok, :created}
 
       try do
         {:ok, user} = User.get(username)
