@@ -40,7 +40,7 @@ defmodule Elastic.Mixfile do
   defp deps do
     [
       {:tesla, "~> 1.4.0"},
-      {:hackney, "~> 1.18.0"},
+      {:hackney, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
