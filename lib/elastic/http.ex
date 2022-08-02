@@ -137,8 +137,7 @@ defmodule Elastic.HTTP do
 
   @spec add_content_type_header(Keyword.t()) :: Keyword.t()
   defp add_content_type_header(options) do
-    headers = Keyword.put(options[:headers], :"Content-Type", "application/json")
-    Keyword.put(options, :headers, headers)
+    Keyword.put(options, :headers, [{"content-type", "application/json"}])
   end
 
   @spec add_aws_header(Keyword.t(), method, url(), binary()) :: Keyword.t()
