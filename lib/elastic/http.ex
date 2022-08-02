@@ -126,7 +126,12 @@ defmodule Elastic.HTTP do
           basic_auth_middleware(options)
         ]
 
-    client = Tesla.client(middlewares, Tesla.Adapter.Hackney)
+    client =
+      Tesla.client(
+        middlewares,
+        Application.get_env(:elastic, :tesla_adapter, Tesla.Adapter.Hackney)
+      )
+
     Tesla.request(client, options) |> process_response
   end
 
