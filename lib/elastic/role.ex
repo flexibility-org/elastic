@@ -14,7 +14,7 @@ defmodule Elastic.Role do
   alias Elastic.ResponseHandler
   alias Elastic.User.Name
 
-  @base_url Elastic.base_url() <> "/_security/role/"
+  defp security_root, do: Elastic.base_url() <> "/_security/role/"
 
   @spec upsert(
           name :: binary(),
@@ -22,7 +22,7 @@ defmodule Elastic.Role do
         ) :: ResponseHandler.upsert_result()
   def upsert(name, body) do
     response =
-      HTTP.put(@base_url <> Name.url_encode(name),
+      HTTP.put(security_root() <> Name.url_encode(name),
         body: body
       )
 
@@ -40,7 +40,7 @@ defmodule Elastic.Role do
 
   @spec delete(name :: binary()) :: ResponseHandler.find_result()
   def delete(name) do
-    HTTP.delete(@base_url <> Name.url_encode(name))
+    HTTP.delete(security_root() <> Name.url_encode(name))
     |> ResponseHandler.process_find_response()
   end
 
@@ -52,7 +52,7 @@ defmodule Elastic.Role do
         _ -> Name.url_encode(name)
       end
 
-    response = HTTP.get(@base_url <> url)
+    response = HTTP.get(security_root() <> url)
 
     case response do
       {:ok, 200, roles} ->

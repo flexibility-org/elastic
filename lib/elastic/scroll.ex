@@ -9,7 +9,7 @@ defmodule Elastic.Scroll do
   alias Elastic.Index
   alias Elastic.ResponseHandler
 
-  @scroll_endpoint Elastic.base_url() <> "/_search/scroll"
+  defp scroll_endpoint, do: Elastic.base_url() <> "/_search/scroll"
 
   @doc ~S"""
     Starts a new scroll using [ElasticSearch's scroll endpoint](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/search-request-scroll.html#search-request-scroll).
@@ -52,7 +52,7 @@ defmodule Elastic.Scroll do
           required(:keepalive) => any()
         }) :: ResponseHandler.result()
   def next(%{scroll_id: scroll_id, keepalive: keepalive}) do
-    HTTP.get(@scroll_endpoint, body: %{scroll_id: scroll_id, scroll: keepalive})
+    HTTP.get(scroll_endpoint(), body: %{scroll_id: scroll_id, scroll: keepalive})
   end
 
   @doc ~S"""
@@ -73,6 +73,6 @@ defmodule Elastic.Scroll do
   """
   @spec clear(String.t() | [String.t(), ...]) :: ResponseHandler.result()
   def clear(scroll_id) do
-    HTTP.delete(@scroll_endpoint, body: %{scroll_id: scroll_id})
+    HTTP.delete(scroll_endpoint(), body: %{scroll_id: scroll_id})
   end
 end
