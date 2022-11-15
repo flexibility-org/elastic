@@ -109,6 +109,7 @@ defmodule Elastic.HTTP do
   defp request(method, url, options) do
     body = Keyword.get(options, :body, []) |> encode_body
     timeout = Application.get_env(:elastic, :timeout, 30_000)
+    config_middlewares = Application.get_env(:elastic, :middlewares, [])
 
     options =
       options
@@ -121,10 +122,12 @@ defmodule Elastic.HTTP do
       |> add_aws_header(method, url, body)
 
     middlewares =
-      Keyword.get(options, :middlewares, []) ++
-        [
-          basic_auth_middleware(options)
-        ]
+      [
+        Keyword.get(options, :middlewares, []),
+        basic_auth_middleware(options),
+        config_middlewares
+      ]
+      |> List.flatten()
 
     client =
       Tesla.client(

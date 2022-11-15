@@ -1,6 +1,6 @@
 defmodule Elastic.Mixfile do
   use Mix.Project
-  @version "3.5.4"
+  @version "3.6.2"
 
   def project do
     [
@@ -57,7 +57,7 @@ defmodule Elastic.Mixfile do
       name: :elastic,
       description: "You Know, for (Elastic) Search",
       files: ["lib", "README*", "mix.exs"],
-      maintainers: ["Ryan Bigg", "Oleks Shturmov"],
+      maintainers: ["Ryan Bigg", "Flexibility.ai"],
       licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/flexibility-org/elastic"}
     ]
