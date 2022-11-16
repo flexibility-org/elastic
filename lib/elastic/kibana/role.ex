@@ -15,7 +15,7 @@ defmodule Elastic.Kibana.Role do
   alias Elastic.ResponseHandler
   alias Elastic.User.Name
 
-  @base_url Elastic.base_kibana_url() <> "/api/security/role/"
+  defp security_root, do: Elastic.base_kibana_url() <> "/api/security/role/"
 
   @spec upsert(
           name :: binary(),
@@ -23,7 +23,7 @@ defmodule Elastic.Kibana.Role do
         ) :: :ok | ResponseHandler.unknown_response_value()
   def upsert(name, kibana_privileges \\ []) do
     response =
-      HTTP.put(@base_url <> Name.url_encode(name),
+      HTTP.put(security_root() <> Name.url_encode(name),
         body: %{kibana: kibana_privileges},
         middlewares: [HTTP.kibana_middleware()]
       )
@@ -40,7 +40,7 @@ defmodule Elastic.Kibana.Role do
   @spec delete(name :: binary()) :: ResponseHandler.find_result()
   def delete(name) do
     response =
-      HTTP.delete(@base_url <> Name.url_encode(name),
+      HTTP.delete(security_root() <> Name.url_encode(name),
         middlewares: [HTTP.kibana_middleware()]
       )
 
@@ -60,8 +60,8 @@ defmodule Elastic.Kibana.Role do
   def get(name \\ nil) do
     url =
       case name do
-        nil -> String.slice(@base_url, 0..-2)
-        _ -> @base_url <> Name.url_encode(name)
+        nil -> String.slice(security_root(), 0..-2)
+        _ -> security_root() <> Name.url_encode(name)
       end
 
     response = HTTP.get(url)

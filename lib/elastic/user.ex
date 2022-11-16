@@ -15,7 +15,7 @@ defmodule Elastic.User do
   alias Elastic.ResponseHandler
   alias Elastic.User.Name
 
-  @base_url Elastic.base_url() <> "/_security/user/"
+  defp security_root, do: Elastic.base_url() <> "/_security/user/"
 
   @spec upsert(
           username :: binary(),
@@ -23,7 +23,7 @@ defmodule Elastic.User do
         ) :: ResponseHandler.upsert_result()
   def upsert(username, body \\ %{}) do
     response =
-      HTTP.put(@base_url <> Name.url_encode(username),
+      HTTP.put(security_root() <> Name.url_encode(username),
         body:
           Enum.into(
             body,
@@ -62,7 +62,7 @@ defmodule Elastic.User do
         _ -> Name.url_encode(username) <> "/_password"
       end
 
-    response = HTTP.post(@base_url <> url, body: %{password: new_password})
+    response = HTTP.post(security_root() <> url, body: %{password: new_password})
 
     case response do
       {:ok, 200, %{}} ->
@@ -83,7 +83,7 @@ defmodule Elastic.User do
 
   @spec delete(username :: binary()) :: ResponseHandler.find_result()
   def delete(username) do
-    HTTP.delete(@base_url <> Name.url_encode(username))
+    HTTP.delete(security_root() <> Name.url_encode(username))
     |> ResponseHandler.process_find_response()
   end
 
@@ -95,7 +95,7 @@ defmodule Elastic.User do
         _ -> Name.url_encode(username)
       end
 
-    response = HTTP.get(@base_url <> url)
+    response = HTTP.get(security_root() <> url)
 
     case response do
       {:ok, 200, users} ->
