@@ -6,7 +6,7 @@ defmodule Elastic.Mixfile do
     [
       app: :elastic,
       version: @version,
-      elixir: "~> 1.5",
+      elixir: "~> 1.10",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -39,12 +39,12 @@ defmodule Elastic.Mixfile do
 
   defp deps do
     [
-      {:tesla, "~> 1.4.0"},
+      {:tesla, "~> 1.5"},
       {:hackney, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
-      {:dialyxir, "~> 1.1.0", only: [:dev], runtime: false},
+      {:dialyxir, "~> 1.1", only: [:dev], runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev},
 
       # Property-based testing
