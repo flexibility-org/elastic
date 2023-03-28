@@ -3,7 +3,9 @@ defmodule Elastic.Query do
 
   defstruct index: nil, body: %{}
 
-  @spec build(index :: binary(), body :: term()) :: %Elastic.Query{}
+  @type t :: %__MODULE__{}
+
+  @spec build(index :: binary(), body :: term()) :: __MODULE__.t()
   def build(index, body) do
     %Elastic.Query{index: index, body: body}
   end

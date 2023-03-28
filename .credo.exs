@@ -27,6 +27,16 @@
       # them here, so they can be loaded by Credo before running the analysis.
       requires: [],
       #
+      # If you want to enforce a style guide and need a more traditional linting
+      # experience, you can change `strict` to `true` below:
+      #
+      strict: false,
+      #
+      # If you want to use uncolored output by default, you can change `color`
+      # to `false` below:
+      #
+      color: true,
+      #
       # Credo automatically checks for updates, like e.g. Hex does.
       # You can disable this behaviour below:
       check_for_updates: true,
@@ -41,6 +51,7 @@
       checks: [
         {Credo.Check.Consistency.ExceptionNames},
         {Credo.Check.Consistency.LineEndings},
+        {Credo.Check.Consistency.ParameterPatternMatching, []},
         {Credo.Check.Consistency.SpaceAroundOperators},
         {Credo.Check.Consistency.SpaceInParentheses},
         {Credo.Check.Consistency.TabsOrSpaces},
@@ -61,7 +72,6 @@
         # set this value to 0 (zero).
         {Credo.Check.Design.TagTODO, exit_status: 2},
         {Credo.Check.Design.TagFIXME},
-
         {Credo.Check.Readability.FunctionNames},
         {Credo.Check.Readability.LargeNumbers},
         {Credo.Check.Readability.MaxLineLength, false},
@@ -73,7 +83,6 @@
         {Credo.Check.Readability.TrailingBlankLine},
         {Credo.Check.Readability.TrailingWhiteSpace},
         {Credo.Check.Readability.VariableNames},
-
         {Credo.Check.Refactor.ABCSize},
         # {Credo.Check.Refactor.CaseTrivialMatches}, # deprecated in 0.4.0
         {Credo.Check.Refactor.CondStatements},
@@ -85,7 +94,6 @@
         {Credo.Check.Refactor.NegatedConditionsWithElse},
         {Credo.Check.Refactor.Nesting},
         {Credo.Check.Refactor.UnlessWithElse},
-
         {Credo.Check.Warning.IExPry},
         {Credo.Check.Warning.IoInspect},
         {Credo.Check.Warning.OperationOnSameValues},
@@ -96,13 +104,12 @@
         {Credo.Check.Warning.UnusedStringOperation},
         {Credo.Check.Warning.UnusedTupleOperation},
         {Credo.Check.Warning.OperationWithConstantResult},
-
         {Credo.Check.Refactor.MapInto, false},
         {Credo.Check.Warning.LazyLogging, false},
 
         # Custom checks can be created using `mix credo.gen.check`.
         #
-        {Credo.Check.Readability.Specs, []},
+        {Credo.Check.Readability.Specs, []}
       ]
     }
   ]

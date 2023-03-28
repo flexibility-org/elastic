@@ -120,13 +120,13 @@ defmodule Elastic.Index do
   end
 
   @doc false
-  @spec search(%Query{}) :: ResponseHandler.result()
+  @spec search(Query.t()) :: ResponseHandler.result()
   def search(%Query{index: index, body: body}) do
     HTTP.get("#{name(index)}/_search" |> url, body: body)
   end
 
   @doc false
-  @spec count(%Query{}) :: ResponseHandler.result()
+  @spec count(Query.t()) :: ResponseHandler.result()
   def count(%Query{index: index, body: body}) do
     HTTP.get("#{name(index)}/_count" |> url, body: body)
   end

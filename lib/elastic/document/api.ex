@@ -249,7 +249,7 @@ defmodule Elastic.Document.API do
       @spec search_query(
               query :: term(),
               es_index :: binary()
-            ) :: %Elastic.Query{}
+            ) :: Elastic.Query.t()
       def search_query(query, es_index \\ es_index()) do
         Query.build(es_index, query)
       end

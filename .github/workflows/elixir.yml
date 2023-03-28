@@ -11,20 +11,22 @@ jobs:
       fail-fast: false
       matrix:
         elixir:
-          - 1.9.4
-          - 1.10.1
-
-# For a list of compatible ElasticSearch+Kibana versions, see
-# https://www.elastic.co/support/matrix#matrix_compatibility
-        elasticsearch:
-          - 7.6.0
-        kibana:
-          - 7.6.2
+          - 1.10.4
+          - 1.13.4
+          - 1.14.2
 
         otp:
-          - 22.2
-          - 23.0
+          - 23.3.4.18
+          - 24.3.4.6
+          - 25.2
 
+        # For a list of compatible ElasticSearch+Kibana versions, see
+        # https://www.elastic.co/support/matrix#matrix_compatibility
+        elasticsearch:
+          - 7.6.0
+
+        kibana:
+          - 7.6.2
 
     runs-on: ubuntu-18.04
 
