@@ -1,4 +1,6 @@
 defmodule Elastic.Document do
+  @moduledoc false
+
   alias Elastic.HTTP
   alias Elastic.Index
   alias Elastic.ResponseHandler
