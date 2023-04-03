@@ -1,5 +1,7 @@
 defmodule Elastic.Document do
-  @moduledoc false
+  @moduledoc """
+  An ElasticSearch document.
+  """
 
   alias Elastic.HTTP
   alias Elastic.Index
