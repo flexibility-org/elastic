@@ -1,5 +1,7 @@
 defmodule Elastic.Query do
-  @moduledoc false
+  @moduledoc """
+  An ElasticSearch query.
+  """
 
   defstruct index: nil, body: %{}
 
