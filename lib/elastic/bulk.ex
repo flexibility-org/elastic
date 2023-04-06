@@ -34,6 +34,7 @@ defmodule Elastic.Bulk do
   @type document ::
           {
             index :: binary(),
+            # The type field has been deprecated in Elastic 8.x and is no longer used
             type :: binary(),
             id :: Document.id(),
             document :: term()
@@ -103,11 +104,11 @@ defmodule Elastic.Bulk do
           id :: Document.id() | nil
         ) :: %{
           required(:_index) => binary(),
-          required(:_type) => binary(),
+          optional(:_type) => binary(),
           optional(:_id) => binary()
         }
-  defp identifier(index, type, nil) do
-    %{_index: index, _type: type}
+  defp identifier(index, _type, nil) do
+    %{_index: index}
   end
 
   defp identifier(index, type, id) do
