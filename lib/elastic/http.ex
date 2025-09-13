@@ -132,7 +132,7 @@ defmodule Elastic.HTTP do
     client =
       Tesla.client(
         middlewares,
-        Application.get_env(:elastic, :tesla_adapter, Tesla.Adapter.Hackney)
+        Application.get_env(:elastic, :tesla_adapter, Tesla.Adapter.Mint)
       )
 
     Tesla.request(client, options) |> process_response

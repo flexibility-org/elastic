@@ -23,7 +23,7 @@ defmodule Elastic.Integration.UserTest do
     end
   end
 
-  @tag integration: true
+  @moduletag integration: true
 
   property "basic upsert/2 and delete/1" do
     check all(

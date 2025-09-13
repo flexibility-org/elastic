@@ -14,7 +14,7 @@ defmodule Elastic.HTTPTest do
       Application.put_env(
         :elastic,
         :middlewares,
-        [{Tesla.Middleware.Logger, debug: true, log_level: :debug}]
+        [{Tesla.Middleware.Logger, debug: true, level: :debug}]
       )
 
       log =

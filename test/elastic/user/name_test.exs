@@ -49,7 +49,7 @@ defmodule Elastic.User.NameTest do
           comma_indices
           |> List.foldl(
             String.to_charlist(rest_chars),
-            fn ndx, text -> List.insert_at(text, ndx, ',') end
+            fn ndx, text -> List.insert_at(text, ndx, ~c",") end
           )
           |> List.to_string()
 

@@ -1,4 +1,4 @@
-use Mix.Config
+import Config
 
 config :elastic,
   index_prefix: "elastic",

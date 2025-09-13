@@ -99,7 +99,7 @@ defmodule Elastic.Integration.ScrollTest do
     assert {:error, :search_context_not_found, _} = Scroller.next_page(pid)
   end
 
-  @tag integration: true
+  @moduletag integration: true
   describe "init" do
     test "starts the server" do
       assert {:ok, state} =

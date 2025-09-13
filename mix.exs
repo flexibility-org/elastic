@@ -28,19 +28,14 @@ defmodule Elastic.Mixfile do
     ]
   end
 
-  def application do
-    [
-      applications: [:logger, :tesla, :hackney, :aws_auth, :jason]
-    ]
-  end
-
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
     [
-      {:tesla, "~> 1.5"},
-      {:hackney, "~> 1.0"},
+      {:tesla, "~> 1.15"},
+      {:mint, "~> 1.0"},
+      {:castore, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:aws_auth, "~> 0.7.1"},
       {:credo, "~> 1.0", only: [:dev, :test]},
@@ -48,7 +43,7 @@ defmodule Elastic.Mixfile do
       {:ex_doc, ">= 0.0.0", only: :dev},
 
       # Property-based testing
-      {:stream_data, "~> 0.5", only: [:dev, :test]}
+      {:stream_data, "~> 1.2", only: [:dev, :test]}
     ]
   end
 

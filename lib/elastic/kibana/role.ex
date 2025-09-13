@@ -60,7 +60,7 @@ defmodule Elastic.Kibana.Role do
   def get(name \\ nil) do
     url =
       case name do
-        nil -> String.slice(security_root(), 0..-2)
+        nil -> String.slice(security_root(), 0..-2//-1)
         _ -> security_root() <> Name.url_encode(name)
       end
 
